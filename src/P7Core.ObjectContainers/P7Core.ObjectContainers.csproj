@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <Authors>Herb Stahl</Authors>
+    <Company />
+    <PackageProjectUrl>https://github.com/ghstahl/P7Core.ObjectContainers</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ghstahl/P7Core.ObjectCaches</RepositoryUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Link="LICENSE" Pack="true" PackagePath="" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+ </Project>

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>0941a502-03d2-436d-ad95-f6010dea5164</UserSecretsId>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj" />
+    <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\ArbitraryNoSubjectExtensionGrant.csproj" />
+    <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
+    <ProjectReference Include="..\IdentityServer4.Contrib.RedisStore\IdentityServer4.Contrib.RedisStore.csproj" />
+    <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
+    <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
+    <ProjectReference Include="..\ProfileServiceManager\ProfileServiceManager.csproj" />
+  </ItemGroup>
+
+</Project>
