@@ -1,0 +1,61 @@
+{
+  "outputAssembly": "IdentityServer4ExtensionGrants.Rollup",
+  "assembliesToMerge": [
+    {
+      "assembly": "IdentityServer4ExtensionGrants.Rollup",
+      "symbols": null
+    },
+    {
+      "assembly": "ArbitraryIdentityExtensionGrant",
+      "symbols": null
+    },
+    {
+      "assembly": "ArbitraryNoSubjectExtensionGrant",
+      "symbols": null
+    },
+    {
+      "assembly": "ArbitraryResourceOwnerExtensionGrant",
+      "symbols": null
+    },
+    {
+      "assembly": "IdentityModelExtras",
+      "symbols": null
+    },
+    {
+      "assembly": "IdentityServer4.Contrib.RedisStore",
+      "symbols": null
+    },
+    {
+      "assembly": "IdentityServer4.RequestTracker.Core",
+      "symbols": null
+    },
+    {
+      "assembly": "IdentityServer4Extras",
+      "symbols": null
+    },
+    {
+      "assembly": "IdentityServer4",
+      "symbols": null
+    },
+    {
+      "assembly": "KeyVaultTokenCreateService",
+      "symbols": null
+    },
+    {
+      "assembly": "MultiRefreshTokenSameSubjectSameClientIdWorkAround",
+      "symbols": null
+    },
+    {
+      "assembly": "P7Core.ObjectContainers",
+      "symbols": null
+    },
+    {
+      "assembly": "P7Core",
+      "symbols": null
+    },
+    {
+      "assembly": "ProfileServiceManager",
+      "symbols": null
+    }
+  ]
+}
