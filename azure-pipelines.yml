@@ -14,11 +14,16 @@ variables:
 
 steps: 
 - script: dotnet restore ./src/IdentityServer4-Extension-Grants.sln
+  displayName: 'dotnet restore'
+
 - script: dotnet build --configuration $(buildConfiguration) ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet build $(buildConfiguration)'
+
 - script: dotnet test ./src/IdentityServer4-Extension-Grants.sln --logger trx --collect "Code coverage"
-- script: dotnet publish --configuration $(buildConfiguration) --output $BUILD_ARTIFACTSTAGINGDIRECTORY
+  displayName: 'dotnet test'
+
 - script: dotnet pack ./src/IdentityServer4-Extension-Grants.sln
+  displayName: 'dotnet pack'
 
 - task: PublishTestResults@2
   inputs:
