@@ -23,7 +23,4 @@ steps:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
 
-- task: NuGetCommand@2
-  inputs:
-    command: pack
-    packagesToPack: '**/*.csproj'
+- script: dotnet pack ./src/IdentityServer4-Extension-Grants.sln
