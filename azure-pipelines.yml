@@ -22,7 +22,7 @@ steps:
 - script: dotnet test ./src/IdentityServer4-Extension-Grants.sln --logger trx --collect "Code coverage"
   displayName: 'dotnet test'
 
-- script: dotnet pack ./src/IdentityServer4-Extension-Grants.sln
+- script: dotnet pack --configuration $(buildConfiguration) --no-build ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet pack'
 
 - task: PublishTestResults@2
