@@ -12,15 +12,17 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
-steps:
+steps: 
 - script: dotnet restore ./src/IdentityServer4-Extension-Grants.sln
 - script: dotnet build --configuration $(buildConfiguration) ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet build $(buildConfiguration)'
 - script: dotnet test ./src/IdentityServer4-Extension-Grants.sln --logger trx --collect "Code coverage"
+- script: dotnet publish --configuration $(buildConfiguration) --output $BUILD_ARTIFACTSTAGINGDIRECTORY
+- script: dotnet pack ./src/IdentityServer4-Extension-Grants.sln
 
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
 
-- script: dotnet pack ./src/IdentityServer4-Extension-Grants.sln
+
