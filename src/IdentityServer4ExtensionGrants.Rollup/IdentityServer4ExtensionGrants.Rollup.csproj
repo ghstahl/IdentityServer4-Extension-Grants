@@ -45,7 +45,9 @@
     <ProjectReference Include="..\P7Core.ObjectContainers\P7Core.ObjectContainers.csproj" >
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\P7Core\P7Core.csproj" />
+    <ProjectReference Include="..\P7Core\P7Core.csproj" >
+      <PrivateAssets>all</PrivateAssets>
+    </ProjectReference>
     <ProjectReference Include="..\ProfileServiceManager\ProfileServiceManager.csproj" >
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
