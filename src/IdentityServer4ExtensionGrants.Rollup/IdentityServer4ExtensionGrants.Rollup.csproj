@@ -6,49 +6,50 @@
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Version>1.0.1</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj" >
+    <ProjectReference Include="..\ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
 
-    <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\ArbitraryNoSubjectExtensionGrant.csproj" >
+    <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\ArbitraryNoSubjectExtensionGrant.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" >
+    <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\IdentityModelExtras\IdentityModelExtras.csproj" >
+    <ProjectReference Include="..\IdentityModelExtras\IdentityModelExtras.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\IdentityServer4.Contrib.RedisStore\IdentityServer4.Contrib.RedisStore.csproj" >
+    <ProjectReference Include="..\IdentityServer4.Contrib.RedisStore\IdentityServer4.Contrib.RedisStore.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" >
+    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" >
+    <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\IdentityServer4Source\2.3.0\IdentityServer4\IdentityServer4.csproj" >
+    <ProjectReference Include="..\IdentityServer4Source\2.3.0\IdentityServer4\IdentityServer4.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" >
+    <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" >
+    <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\P7Core.ObjectContainers\P7Core.ObjectContainers.csproj" >
+    <ProjectReference Include="..\P7Core.ObjectContainers\P7Core.ObjectContainers.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\P7Core\P7Core.csproj" >
+    <ProjectReference Include="..\P7Core\P7Core.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
-    <ProjectReference Include="..\ProfileServiceManager\ProfileServiceManager.csproj" >
+    <ProjectReference Include="..\ProfileServiceManager\ProfileServiceManager.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
   </ItemGroup>

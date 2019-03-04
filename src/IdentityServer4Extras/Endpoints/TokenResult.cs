@@ -14,11 +14,38 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4Extras.Endpoints
 {
+    public class TokenResponseExtra
+    {
+        public TokenResponseExtra() { }
+
+        public string IdentityToken { get; set; }
+        public string AccessToken { get; set; }
+        public int AccessTokenLifetime { get; set; }
+        public string RefreshToken { get; set; }
+        public Dictionary<string, object> Custom { get; set; }
+    }
+
+    internal static class TokenResponseExtraExtensions
+    {
+        public static TokenResponseExtra ToTokenResponseExtra(this TokenResponse tokenResponse)
+        {
+            return new TokenResponseExtra()
+            {
+                AccessToken = tokenResponse.AccessToken,
+                AccessTokenLifetime = tokenResponse.AccessTokenLifetime,
+                Custom = tokenResponse.Custom,
+                IdentityToken = tokenResponse.IdentityToken,
+                RefreshToken = tokenResponse.RefreshToken
+            };
+
+
+        }
+    }
     public class TokenResult : IEndpointResult
     {
-        public TokenResponse Response { get; set; }
+        public TokenResponseExtra Response { get; set; }
 
-        public TokenResult(TokenResponse response)
+        public TokenResult(TokenResponseExtra response)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
 

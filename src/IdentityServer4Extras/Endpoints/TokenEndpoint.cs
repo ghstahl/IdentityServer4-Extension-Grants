@@ -131,7 +131,7 @@ namespace IdentityServer4Extras.Endpoints
 
             // return result
             _logger.LogDebug("Token request success.");
-            rawResult.TokenResult = new TokenResult(response);
+            rawResult.TokenResult = new TokenResult(response.ToTokenResponseExtra());
             return rawResult;
         }
 
