@@ -12,7 +12,18 @@ pool:
 variables:
   buildConfiguration: 'Release'
 
+#Your build pipeline references an undefined variable named ‘Parameters.DevOpsPat’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
+
+
 steps: 
+- task: maikvandergaag.maikvandergaag-versioncounter.versioncounter.versioncounter@1
+  displayName: 'Version number counter'
+  inputs:
+    VersionVariable: versionnumber
+    UpdateMinorVersion: true
+    UpdateMajorVersion: true
+    DevOpsPat: '$(Parameters.DevOpsPat)'
+
 - script: dotnet restore ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet restore'
 
