@@ -16,13 +16,7 @@ variables:
 
 
 steps: 
-- task: maikvandergaag.maikvandergaag-versioncounter.versioncounter.versioncounter@1
-  displayName: 'Version number counter $(versionnumber)'
-  inputs:
-    VersionVariable: versionnumber
-    UpdateMinorVersion: true
-    UpdateMajorVersion: true
-    DevOpsPat: '$(Parameters.DevOpsPat)'
+
 
 - script: dotnet restore ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet restore'
