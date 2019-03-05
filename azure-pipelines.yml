@@ -17,7 +17,7 @@ variables:
 
 steps: 
 - task: maikvandergaag.maikvandergaag-versioncounter.versioncounter.versioncounter@1
-  displayName: 'Version number counter'
+  displayName: 'Version number counter $(versionnumber)'
   inputs:
     VersionVariable: versionnumber
     UpdateMinorVersion: true
