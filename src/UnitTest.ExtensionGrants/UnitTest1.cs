@@ -9,5 +9,9 @@ namespace UnitTest.ExtensionGrants
         public void TestMethod1()
         {
         }
+        [TestMethod]
+        public void TestMethod2()
+        {
+        }
     }
 }
