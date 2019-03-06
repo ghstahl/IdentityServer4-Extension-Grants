@@ -17,7 +17,7 @@ variables:
 name: $(BuildDefinitionName)_$(Date:yyyyMMdd)$(Rev:.rr)
 steps: 
 
-- script: echo hello world $(BuildDefinitionName)
+- script: echo hello world $(Build.BuildNumber)
 
 - script: dotnet restore ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet restore'
