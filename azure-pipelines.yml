@@ -20,8 +20,11 @@ steps:
 - script: echo hello BuildNumber $(Build.BuildNumber)
   displayName: 'BuildNumber'
 
-- script: dotnet restore ./src/IdentityServer4-Extension-Grants.sln
+- task: DotNetCoreCLI@2
   displayName: 'dotnet restore'
+  inputs:
+    command: restore
+    projects: '**/*.sln'
 
 - script: dotnet build --configuration $(buildConfiguration) ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet build $(buildConfiguration)'
