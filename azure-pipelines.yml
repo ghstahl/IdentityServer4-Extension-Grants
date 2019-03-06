@@ -31,7 +31,7 @@ steps:
   inputs:
     command: build
     projects: '**/*.sln'
-    arguments: '/p:AssemblyVersion=1.0.$(Build.BuildNumber)'
+    arguments: '--configuration $(buildConfiguration) /p:AssemblyVersion=1.0.$(Build.BuildNumber)'
     
 - script: dotnet test ./src/IdentityServer4-Extension-Grants.sln --logger trx --collect "Code coverage"
   displayName: 'dotnet test'
