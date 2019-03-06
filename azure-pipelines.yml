@@ -2,7 +2,7 @@
 # Build and test ASP.NET Core projects targeting .NET Core.
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
+name: $(Date:yy)$(DayOfYear)$(rev:.r)
 trigger:
 - master
 
@@ -11,13 +11,13 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-
+  version: '1.0.$(Build.BuildNumber)'
 #Your build pipeline references an undefined variable named ‘Parameters.DevOpsPat’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab. See https://go.microsoft.com/fwlink/?linkid=865972
 
-name: $(Date:yy)$(DayOfYear)$(rev:.r)
+
 steps: 
 
-- script: echo hello BuildNumber $(Build.BuildNumber)
+- script: echo hello BuildNumber $(Build.BuildNumber) $(version)
   displayName: 'BuildNumber'
 
 - task: DotNetCoreCLI@2
@@ -33,11 +33,20 @@ steps:
     projects: '**/*.sln'
     arguments: '--configuration $(buildConfiguration) /p:AssemblyVersion=1.0.$(Build.BuildNumber)'
     
-- script: dotnet test ./src/IdentityServer4-Extension-Grants.sln --logger trx --collect "Code coverage"
+- task: DotNetCoreCLI@2
   displayName: 'dotnet test'
-
-- script: dotnet pack --configuration $(buildConfiguration) --no-build ./src/IdentityServer4-Extension-Grants.sln
+  inputs:
+    command: test
+    projects: '**/*.sln'
+    arguments: '--configuration $(buildConfiguration) --logger trx --collect "Code coverage"'
+     
+- task: DotNetCoreCLI@2
   displayName: 'dotnet pack'
+  inputs:
+    command: pack
+    projects: '**/*.sln'
+    arguments: '--configuration $(buildConfiguration) --no-build --include-source --include-symbols /property:Version=1.0.$(Build.BuildNumber)'
+    
 
 - task: PublishTestResults@2
   inputs:
