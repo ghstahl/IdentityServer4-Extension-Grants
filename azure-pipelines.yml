@@ -31,7 +31,7 @@ steps:
   inputs:
     command: build
     projects: '**/*.sln'
-    arguments: '--configuration $(buildConfiguration) /p:AssemblyVersion=1.0.$(Build.BuildNumber)'
+    arguments: '--configuration $(buildConfiguration) /p:AssemblyVersion=$(version)'
     
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
@@ -40,12 +40,9 @@ steps:
     projects: '**/*.sln'
     arguments: '--configuration $(buildConfiguration) --logger trx --collect "Code coverage"'
      
-- task: DotNetCoreCLI@2
+- script: dotnet pack --configuration $(buildConfiguration) --no-build /property:Version=$(version) ./src/IdentityServer4-Extension-Grants.sln
   displayName: 'dotnet pack'
-  inputs:
-    command: pack
-    projects: '**/*.sln'
-    arguments: '--configuration $(buildConfiguration) --no-build --include-source --include-symbols /property:Version=1.0.$(Build.BuildNumber)'
+  
     
 
 - task: PublishTestResults@2
