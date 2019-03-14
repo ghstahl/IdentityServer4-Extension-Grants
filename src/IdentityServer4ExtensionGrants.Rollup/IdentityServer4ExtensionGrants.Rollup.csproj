@@ -5,6 +5,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PackageLicenseUrl>https://github.com/ghstahl/IdentityServer4-Extension-Grants/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ghstahl/IdentityServer4-Extension-Grants/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ghstahl/IdentityServer4-Extension-Grants/</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="3.10.6" />
