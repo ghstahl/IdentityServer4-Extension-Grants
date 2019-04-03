@@ -93,6 +93,7 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
             builder.SwapOutDefaultTokenService();
             builder.SwapOutScopeValidator();
             builder.SwapOutTokenRevocationRequestValidator();
+            builder.SwapOutDefaultClaimsService();
 
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();
