@@ -74,13 +74,6 @@ namespace ArbitraryResourceOwnerExtensionGrant
 
             }
 
-            var clientExtra = request.ValidatedRequest.Client as ClientExtra;
-            if (!string.IsNullOrEmpty(clientExtra.Namespace))
-            {
-                token.Claims.Add(new Claim("client_namespace", clientExtra.Namespace));
-
-            }
-
             return (true, token);
         }
 

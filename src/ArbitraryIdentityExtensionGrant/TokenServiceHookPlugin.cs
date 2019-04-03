@@ -70,11 +70,6 @@ namespace ArbitraryIdentityExtensionGrant
                 token.Claims.Add(new Claim(Constants.CustomPayload, customPayload, IdentityServerConstants.ClaimValueTypes.Json));
 
             }
-            var clientExtra = request.ValidatedRequest.Client as ClientExtra;
-            if (!string.IsNullOrEmpty(clientExtra.Namespace))
-            {
-                token.Claims.Add(new Claim("client_namespace", clientExtra.Namespace));
-            }
             return (true, token);
         }
 
