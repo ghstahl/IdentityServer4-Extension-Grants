@@ -1,3 +1,4 @@
 ﻿IdentityServer4Extras.Endpoints.*
 IdentityServerRequestTracker.*
 IdentityServer4.ResponseHandling.TokenErrorResponse
+IdentityModelExtras.Contracts

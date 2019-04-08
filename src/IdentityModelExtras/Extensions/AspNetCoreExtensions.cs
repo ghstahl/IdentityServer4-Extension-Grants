@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using IdentityModelExtras.Contracts;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IdentityModelExtras.Extensions
@@ -8,6 +9,7 @@ namespace IdentityModelExtras.Extensions
         public static void AddIdentityModelExtrasTypes(this IServiceCollection services)
         {
             services.TryAddTransient<IDefaultHttpClientFactory, NullDefaultHttpClientFactory>();
+            services.TryAddSingleton<ISelfValidator,SelfValidator>();
         }
     }
 }

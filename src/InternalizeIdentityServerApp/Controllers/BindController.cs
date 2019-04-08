@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using IdentityModelExtras;
+using IdentityModelExtras.Contracts;
 using IdentityServer4Extras.Endpoints;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,11 +20,14 @@ namespace InternalizeIdentityServerApp.Controllers
     {
         private ILogger<BindController> _logger;
         private ITokenEndpointHandlerExtra _tokenEndpointHandlerExtra;
+        private ISelfValidator _selfValidator;
 
         public BindController(
+            ISelfValidator selfValidator,
             ITokenEndpointHandlerExtra tokenEndpointHandlerExtra,
             ILogger<BindController> logger)
         {
+            _selfValidator = selfValidator;
             _tokenEndpointHandlerExtra = tokenEndpointHandlerExtra;
             _logger = logger;
         }
@@ -132,6 +137,8 @@ namespace InternalizeIdentityServerApp.Controllers
                 CustomPayload = new CustomPayload()
             };
             var result = await _tokenEndpointHandlerExtra.ProcessRawAsync(extensionGrantRequest);
+
+        
             return result;
         }
       
@@ -167,6 +174,7 @@ namespace InternalizeIdentityServerApp.Controllers
                 CustomPayload = new CustomPayload()
             };
             var result = await _tokenEndpointHandlerExtra.ProcessRawAsync(extensionGrantRequest);
+            var a = await _selfValidator.ValidateTokenAsync(result.TokenResult.Response.IdentityToken);
             return result;
         }
     }

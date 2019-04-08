@@ -16,6 +16,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.0" />
 
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityServer4Source\2.3.0\IdentityServer4\IdentityServer4.csproj" />
+  </ItemGroup>
 
 
 </Project>
