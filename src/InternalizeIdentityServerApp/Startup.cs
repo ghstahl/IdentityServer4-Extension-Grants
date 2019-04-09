@@ -24,11 +24,12 @@ using Microsoft.IdentityModel.Tokens;
 using P7Core;
 using P7Core.IRules;
 using P7Core.ObjectContainers.Extensions;
+using P7IdentityServer4.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace InternalizeIdentityServerApp
 {
-    public class Startup
+    public class Startup: IExtensionGrantsRollupRegistrations
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         public IConfiguration Configuration { get; }
@@ -55,7 +56,7 @@ namespace InternalizeIdentityServerApp
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-            services.AddExtensionGrantsRollup(Configuration);
+            services.AddExtensionGrantsRollup(this,Configuration);
 
 
 
@@ -142,6 +143,74 @@ namespace InternalizeIdentityServerApp
             app.UseAuthentication();
 
             app.UseMvc();
+        }
+
+        public void AddIdentityResources(IServiceCollection services, IIdentityServerBuilder builder)
+        {
+            var identityResources = Configuration.LoadIdentityResourcesFromSettings();
+            builder.AddInMemoryIdentityResources(identityResources);
+        }
+
+        public void AddClients(IServiceCollection services, IIdentityServerBuilder builder)
+        {
+            var clients = Configuration.LoadClientsFromSettings();
+            builder.AddInMemoryClientsExtra(clients);
+        }
+
+        public void AddApiResources(IServiceCollection services, IIdentityServerBuilder builder)
+        {
+            var apiResources = Configuration.LoadApiResourcesFromSettings();
+            builder.AddInMemoryApiResources(apiResources);
+        }
+
+        public void AddOperationalStore(IServiceCollection services, IIdentityServerBuilder builder)
+        {
+            bool useRedis = Convert.ToBoolean(Configuration["appOptions:redis:useRedis"]);
+            if (useRedis)
+            {
+                var redisConnectionString = Configuration["appOptions:redis:redisConnectionString"];
+                builder.AddOperationalStore(options =>
+                    {
+                        options.RedisConnectionString = redisConnectionString;
+                        options.Db = 1;
+                    })
+                    .AddRedisCaching(options =>
+                    {
+                        options.RedisConnectionString = redisConnectionString;
+                        options.KeyPrefix = "prefix";
+                    });
+
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                });
+            }
+            else
+            {
+                builder.AddInMemoryPersistedGrants();
+                services.AddDistributedMemoryCache();
+            }
+        }
+
+        public void AddSigningServices(IServiceCollection services, IIdentityServerBuilder builder)
+        {
+            bool useKeyVault = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVault"]);
+            bool useKeyVaultSigning = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVaultSigning"]);
+            if (useKeyVault)
+            {
+                builder.AddKeyVaultCredentialStore();
+                services.AddKeyVaultTokenCreateServiceTypes();
+                services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
+                if (useKeyVaultSigning)
+                {
+                    // this signs the token using azure keyvault to do the actual signing
+                    builder.AddKeyVaultTokenCreateService();
+                }
+            }
+            else
+            {
+                builder.AddDeveloperSigningCredential();
+            }
         }
     }
 }

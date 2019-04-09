@@ -6,6 +6,10 @@
       "symbols": null
     },
     {
+      "assembly": "IdentityServer4ExtensionGrants.RollupShadow",
+      "symbols": null
+    },
+    {
       "assembly": "ArbitraryIdentityExtensionGrant",
       "symbols": null
     },
@@ -59,3 +63,4 @@
     }
   ]
 }
+

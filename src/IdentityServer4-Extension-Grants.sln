@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "IdentityServer4Source\2.3.0\IdentityServer4\IdentityServer4.csproj", "{8C0E5377-A95E-4E6D-925D-848D14A55F0D}"
 EndProject
@@ -39,8 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InternalizeIdentityServerAp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Host", "Host", "{BB768E22-16C9-4F67-887E-73A13970268B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4ExtensionGrants.Rollup", "IdentityServer4ExtensionGrants.Rollup\IdentityServer4ExtensionGrants.Rollup.csproj", "{A01DC79F-75C8-485B-A29D-68495FEFA805}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4ExtensionGrants.RollupShadow", "IdentityServer4ExtensionGrants.RollupShadow\IdentityServer4ExtensionGrants.RollupShadow.csproj", "{B3434E39-8D15-476C-B1A6-D7B83EA9FD7C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{8A18F75D-85A9-472E-B4F6-16D91FB6C447}"
@@ -55,7 +53,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6F83F779-7BFA-434F-A8D9-B063A43F6F23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest.ExtensionGrants", "UnitTest.ExtensionGrants\UnitTest.ExtensionGrants.csproj", "{064133A1-D934-42B9-8ED4-E4CACF025945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest.ExtensionGrants", "UnitTest.ExtensionGrants\UnitTest.ExtensionGrants.csproj", "{064133A1-D934-42B9-8ED4-E4CACF025945}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4ExtensionGrants.Rollup", "IdentityServer4ExtensionGrants.Rollup\IdentityServer4ExtensionGrants.Rollup.csproj", "{1E968902-57E6-42AE-BC51-28DAB07AED37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.4.0", "2.4.0", "{A25C2A9E-076A-4D86-9793-A77DA034BA00}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "IdentityServer4Source\2.4.0\IdentityServer4\IdentityServer4.csproj", "{D247D230-D522-4760-8679-948419B6EB2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -119,10 +123,6 @@ Global
 		{8ACFCDF1-6159-4860-BD23-943C043CA66E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8ACFCDF1-6159-4860-BD23-943C043CA66E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ACFCDF1-6159-4860-BD23-943C043CA66E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A01DC79F-75C8-485B-A29D-68495FEFA805}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A01DC79F-75C8-485B-A29D-68495FEFA805}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A01DC79F-75C8-485B-A29D-68495FEFA805}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A01DC79F-75C8-485B-A29D-68495FEFA805}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3434E39-8D15-476C-B1A6-D7B83EA9FD7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3434E39-8D15-476C-B1A6-D7B83EA9FD7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3434E39-8D15-476C-B1A6-D7B83EA9FD7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -131,6 +131,14 @@ Global
 		{064133A1-D934-42B9-8ED4-E4CACF025945}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{064133A1-D934-42B9-8ED4-E4CACF025945}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{064133A1-D934-42B9-8ED4-E4CACF025945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E968902-57E6-42AE-BC51-28DAB07AED37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E968902-57E6-42AE-BC51-28DAB07AED37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E968902-57E6-42AE-BC51-28DAB07AED37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E968902-57E6-42AE-BC51-28DAB07AED37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D247D230-D522-4760-8679-948419B6EB2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D247D230-D522-4760-8679-948419B6EB2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D247D230-D522-4760-8679-948419B6EB2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D247D230-D522-4760-8679-948419B6EB2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -142,9 +150,11 @@ Global
 		{69F21662-F11F-49D5-B515-BAD807A15F46} = {3FC4B33C-6AA0-44C8-983E-9FB2A1ED3D9D}
 		{65E61C64-20A3-4A0A-AEE9-5F66FACC50B0} = {3FC4B33C-6AA0-44C8-983E-9FB2A1ED3D9D}
 		{8ACFCDF1-6159-4860-BD23-943C043CA66E} = {BB768E22-16C9-4F67-887E-73A13970268B}
-		{A01DC79F-75C8-485B-A29D-68495FEFA805} = {BB768E22-16C9-4F67-887E-73A13970268B}
 		{B3434E39-8D15-476C-B1A6-D7B83EA9FD7C} = {BB768E22-16C9-4F67-887E-73A13970268B}
 		{064133A1-D934-42B9-8ED4-E4CACF025945} = {6F83F779-7BFA-434F-A8D9-B063A43F6F23}
+		{1E968902-57E6-42AE-BC51-28DAB07AED37} = {BB768E22-16C9-4F67-887E-73A13970268B}
+		{A25C2A9E-076A-4D86-9793-A77DA034BA00} = {521AD0E2-C41D-43B9-AFED-F1055223E1CC}
+		{D247D230-D522-4760-8679-948419B6EB2A} = {A25C2A9E-076A-4D86-9793-A77DA034BA00}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {590E5B07-5FD9-486F-A30C-D0E8F9C1F691}

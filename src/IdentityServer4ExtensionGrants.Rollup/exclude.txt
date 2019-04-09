@@ -1,4 +1,9 @@
-﻿IdentityServer4Extras.Endpoints.*
+﻿IdentityServer4ExtensionGrants.Rollup.*
+IdentityServer4Extras.Endpoints.*
+IdentityServer4Extras.Extensions.*
 IdentityServerRequestTracker.*
 IdentityServer4.ResponseHandling.TokenErrorResponse
 IdentityModelExtras.Contracts
+P7IdentityServer4.Extensions
+Microsoft.Extensions.DependencyInjection
+IdentityServer4.Contrib.RedisStore.*

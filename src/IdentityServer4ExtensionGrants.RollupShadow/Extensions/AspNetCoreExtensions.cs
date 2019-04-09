@@ -18,29 +18,51 @@ using ProfileServiceManager.Extensions;
 
 namespace IdentityServer4ExtensionGrants.Rollup.Extensions
 {
+    public interface IExtensionGrantsRollupRegistrations
+    {
+        void AddIdentityResources(IServiceCollection services,IIdentityServerBuilder builder);
+        void AddClients(IServiceCollection services, IIdentityServerBuilder builder);
+        void AddApiResources(IServiceCollection services, IIdentityServerBuilder builder);
+        void AddOperationalStore(IServiceCollection services, IIdentityServerBuilder builder);
+        void AddSigningServices(IServiceCollection services, IIdentityServerBuilder builder);
+    }
     public static class AspNetCoreExtensions
     {
-        public static void AddExtensionGrantsRollup(this IServiceCollection services, IConfiguration configuration)
+        public static void AddExtensionGrantsRollup(this IServiceCollection services, IExtensionGrantsRollupRegistrations extensionGrantsRollupRegistrations,IConfiguration configuration)
         {
             services.AddObjectContainer();  // use this vs a static to cache class data.
-            var clients = configuration.LoadClientsFromSettings();
-            var apiResources = configuration.LoadApiResourcesFromSettings();
-            var identityResources = configuration.LoadIdentityResourcesFromSettings();
+                                            /*
+                                                var clients = configuration.LoadClientsFromSettings();
+                                                var apiResources = configuration.LoadApiResourcesFromSettings();
+                                                var identityResources = configuration.LoadIdentityResourcesFromSettings();
+                                                bool useRedis = Convert.ToBoolean(configuration["appOptions:redis:useRedis"]);
+                                                bool useKeyVault = Convert.ToBoolean(configuration["appOptions:keyVault:useKeyVault"]);
+                                                bool useKeyVaultSigning = Convert.ToBoolean(configuration["appOptions:keyVault:useKeyVaultSigning"]);
+                                           */
 
-            bool useRedis = Convert.ToBoolean(configuration["appOptions:redis:useRedis"]);
-            bool useKeyVault = Convert.ToBoolean(configuration["appOptions:keyVault:useKeyVault"]);
-            bool useKeyVaultSigning = Convert.ToBoolean(configuration["appOptions:keyVault:useKeyVaultSigning"]);
+
 
             var builder = services
-               .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; })
-               .AddInMemoryIdentityResources(identityResources)
-               .AddInMemoryApiResources(apiResources)
-               .AddInMemoryClientsExtra(clients)
+              .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; });
+           extensionGrantsRollupRegistrations.AddIdentityResources(services,builder);
+           extensionGrantsRollupRegistrations.AddClients(services, builder);
+           extensionGrantsRollupRegistrations.AddApiResources(services, builder);
+           /*
+             .AddInMemoryIdentityResources(identityResources)
+              .AddInMemoryApiResources(apiResources)
+              .AddInMemoryClientsExtra(clients)
+            */
+
+            builder
                .AddIdentityServer4Extras()
                .AddProfileServiceManager()
                .AddArbitraryOwnerResourceExtensionGrant()
                .AddArbitraryIdentityExtensionGrant()
                .AddArbitraryNoSubjectExtensionGrant();
+            extensionGrantsRollupRegistrations.AddOperationalStore(services, builder);
+            extensionGrantsRollupRegistrations.AddSigningServices(services, builder);
+
+            /*
             // My Replacement Services.
             if (useRedis)
             {
@@ -66,6 +88,8 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
                 builder.AddInMemoryPersistedGrants();
                 services.AddDistributedMemoryCache();
             }
+            */
+            /*
             if (useKeyVault)
             {
                 builder.AddKeyVaultCredentialStore();
@@ -81,6 +105,7 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
             {
                 builder.AddDeveloperSigningCredential();
             }
+            */
 
             // my replacement services.
             builder.AddRefreshTokenRevokationGeneratorWorkAround();

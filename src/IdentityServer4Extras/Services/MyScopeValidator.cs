@@ -67,4 +67,5 @@ namespace IdentityServer4Extras.Services
             return _scopeValidator.IsResponseTypeValid(responseType);
         }
     }
+    
 }
