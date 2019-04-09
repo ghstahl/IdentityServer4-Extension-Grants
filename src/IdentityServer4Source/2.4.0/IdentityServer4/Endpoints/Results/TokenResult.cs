@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class TokenResult : IEndpointResult
+    internal class TokenResult : ITokenEndpointResult
     {
         public TokenResponse Response { get; set; }
 
