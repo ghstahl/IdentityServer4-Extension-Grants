@@ -7,3 +7,4 @@ IdentityModelExtras.Contracts
 P7IdentityServer4.Extensions
 Microsoft.Extensions.DependencyInjection
 IdentityServer4.Contrib.RedisStore.*
+IdentityServer4.Contrib.CosmosDB.*

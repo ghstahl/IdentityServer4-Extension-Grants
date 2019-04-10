@@ -60,7 +60,13 @@
     {
       "assembly": "ProfileServiceManager",
       "symbols": null
+    },
+    {
+      "assembly": "IdentityServer4.Contrib.CosmosDB",
+      "symbols": null
     }
+
+
   ]
 }
 
