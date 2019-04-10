@@ -25,6 +25,7 @@ namespace P7IdentityServer4.Extensions
 
             builder.Services.RemoveAll<IKeyMaterialService>();
             builder.Services.TryAddSingleton<IKeyMaterialService>(x => x.GetService<MySigningCredentialStore>());
+            builder.Services.TryAddSingleton<IValidationKeysStore>(x => x.GetService<MySigningCredentialStore>());
 
             return builder;
         }

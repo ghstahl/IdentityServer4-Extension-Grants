@@ -33,6 +33,7 @@ namespace P7IdentityServer4
     public class MySigningCredentialStore : 
         ITokenSigningCredentialStore,
         IKeyMaterialService,
+        IValidationKeysStore,
         ISigningCredentialStore
     {
         private readonly IKeyVaultCache _keyVaultCache;
