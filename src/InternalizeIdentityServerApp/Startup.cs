@@ -56,7 +56,7 @@ namespace InternalizeIdentityServerApp
                         .AllowAnyHeader()
                         .AllowCredentials());
             });
-            services.AddExtensionGrantsRollup(this,Configuration);
+            services.AddExtensionGrantsRollup(this);
 
 
 
