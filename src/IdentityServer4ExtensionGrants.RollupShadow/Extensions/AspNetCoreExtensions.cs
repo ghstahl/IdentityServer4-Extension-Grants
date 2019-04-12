@@ -28,7 +28,9 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
     }
     public static class AspNetCoreExtensions
     {
-        public static void AddExtensionGrantsRollup(this IServiceCollection services, IExtensionGrantsRollupRegistrations extensionGrantsRollupRegistrations,IConfiguration configuration)
+        public static void AddExtensionGrantsRollup(
+            this IServiceCollection services, 
+            IExtensionGrantsRollupRegistrations extensionGrantsRollupRegistrations)
         {
             services.AddObjectContainer();  // use this vs a static to cache class data.
                                             /*
@@ -133,7 +135,7 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
             services.AddIdentityServerRequestTrackerMiddleware();
 
             // my configurations
-            services.RegisterP7CoreConfigurationServices(configuration);
+       //     services.RegisterP7CoreConfigurationServices(configuration);
 
         }
     }
