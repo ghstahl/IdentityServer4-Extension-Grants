@@ -2,63 +2,63 @@
   "outputAssembly": "IdentityServer4ExtensionGrants.Rollup",
   "assembliesToMerge": [
     {
-      "assembly": "IdentityServer4ExtensionGrants.Rollup",
+      "assembly": "P7Corp.IdentityServer4ExtensionGrants.Rollup",
       "symbols": null
     },
     {
-      "assembly": "IdentityServer4ExtensionGrants.RollupShadow",
+      "assembly": "P7Corp.IdentityServer4ExtensionGrants.RollupShadow",
       "symbols": null
     },
     {
-      "assembly": "ArbitraryIdentityExtensionGrant",
+      "assembly": "P7Corp.ArbitraryIdentityExtensionGrant",
       "symbols": null
     },
     {
-      "assembly": "ArbitraryNoSubjectExtensionGrant",
+      "assembly": "P7Corp.ArbitraryNoSubjectExtensionGrant",
       "symbols": null
     },
     {
-      "assembly": "ArbitraryResourceOwnerExtensionGrant",
+      "assembly": "P7Corp.ArbitraryResourceOwnerExtensionGrant",
       "symbols": null
     },
     {
-      "assembly": "IdentityModelExtras",
+      "assembly": "P7Corp.IdentityModelExtras",
       "symbols": null
     },
     {
-      "assembly": "IdentityServer4.Contrib.RedisStore",
+      "assembly": "P7Corp.IdentityServer4.Contrib.RedisStore",
       "symbols": null
     },
     {
-      "assembly": "IdentityServer4.RequestTracker.Core",
+      "assembly": "P7Corp.IdentityServer4.RequestTracker.Core",
       "symbols": null
     },
     {
-      "assembly": "IdentityServer4Extras",
+      "assembly": "P7Corp.IdentityServer4Extras",
       "symbols": null
     },
     {
-      "assembly": "IdentityServer4",
+      "assembly": "P7Corp.IdentityServer4",
       "symbols": null
     },
     {
-      "assembly": "KeyVaultTokenCreateService",
+      "assembly": "P7Corp.KeyVaultTokenCreateService",
       "symbols": null
     },
     {
-      "assembly": "MultiRefreshTokenSameSubjectSameClientIdWorkAround",
+      "assembly": "P7Corp.MultiRefreshTokenSameSubjectSameClientIdWorkAround",
       "symbols": null
     },
     {
-      "assembly": "IdentityServer4ExtensionGrants.P7Core",
+      "assembly": "P7Corp.P7Core",
       "symbols": null
     },
     {
-      "assembly": "ProfileServiceManager",
+      "assembly": "P7Corp.ProfileServiceManager",
       "symbols": null
     },
     {
-      "assembly": "IdentityServer4.Contrib.CosmosDB",
+      "assembly": "P7Corp.IdentityServer4.Contrib.CosmosDB",
       "symbols": null
     }
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>ArbitraryNoSubjectExtensionGrant</RootNamespace>
-    <AssemblyName>ArbitraryNoSubjectExtensionGrant</AssemblyName>
+    <AssemblyName>P7Corp.ArbitraryNoSubjectExtensionGrant</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
-    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" />
+    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\P7Corp.IdentityServer4.RequestTracker.Core.csproj" />
+    <ProjectReference Include="..\IdentityServer4Extras\P7Corp.IdentityServer4Extras.csproj" />
   </ItemGroup>
 
 </Project>
