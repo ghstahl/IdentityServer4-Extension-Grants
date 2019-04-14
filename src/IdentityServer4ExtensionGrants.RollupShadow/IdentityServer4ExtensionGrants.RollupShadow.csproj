@@ -11,11 +11,15 @@
     <ProjectReference Include="..\ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj" />
     <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\ArbitraryNoSubjectExtensionGrant.csproj" />
     <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
+    <ProjectReference Include="..\IdentityModelExtras\IdentityModelExtras.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.CosmosDB\IdentityServer4.Contrib.CosmosDB.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.RedisStore\IdentityServer4.Contrib.RedisStore.csproj" />
+    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\IdentityServer4Source\2.4.0\IdentityServer4\IdentityServer4.csproj" />
     <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
+    <ProjectReference Include="..\IdentityServer4ExtensionGrants.P7Core\IdentityServer4ExtensionGrants.P7Core.csproj" />
     <ProjectReference Include="..\ProfileServiceManager\ProfileServiceManager.csproj" />
   </ItemGroup>
 </Project>

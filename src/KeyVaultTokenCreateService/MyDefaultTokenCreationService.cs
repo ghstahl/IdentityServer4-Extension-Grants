@@ -12,8 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using P7Core.ObjectContainers.Cache;
-
+using P7IdentityServer4.Cache;
 
 namespace P7IdentityServer4
 {

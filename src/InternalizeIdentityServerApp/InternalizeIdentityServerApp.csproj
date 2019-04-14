@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer4ExtensionGrants.RollupShadow\IdentityServer4ExtensionGrants.RollupShadow.csproj" />
-    <ProjectReference Include="..\P7Core\P7Core.csproj" />
+
   </ItemGroup>
 
 </Project>

@@ -50,11 +50,7 @@
       "symbols": null
     },
     {
-      "assembly": "P7Core.ObjectContainers",
-      "symbols": null
-    },
-    {
-      "assembly": "P7Core",
+      "assembly": "IdentityServer4ExtensionGrants.P7Core",
       "symbols": null
     },
     {
