@@ -24,12 +24,7 @@ namespace IdentityServer4Extras.Extensions
             IEnumerable<Client> clients)
         {
             builder.Services.AddSingleton(clients);
-            builder.Services.TryAddSingleton<InMemoryClientStoreExtra>();
-
-            builder.Services.TryAddSingleton<IClientStoreExtra, InMemoryClientStoreExtra>();
-            builder.Services.TryAddSingleton<IClientStoreExtra>(x => x.GetService<InMemoryClientStoreExtra>());
-
-            builder.AddClientStore<CachingClientStore<InMemoryClientStoreExtra>>();
+            builder.AddInMemoryClientStoreExtra();
 
             var existingCors = builder.Services.Where(x => x.ServiceType == typeof(ICorsPolicyService)).LastOrDefault();
             if (existingCors != null &&
