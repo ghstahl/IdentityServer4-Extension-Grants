@@ -4,6 +4,7 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using IdentityModelExtras;
 using IdentityModelExtras.Extensions;
+using IdentityServer4.Configuration;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker.Extensions;
@@ -20,16 +21,25 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
 {
     public interface IExtensionGrantsRollupRegistrations
     {
-        void AddIdentityResources(IServiceCollection services,IIdentityServerBuilder builder);
+        void AddIdentityResources(IServiceCollection services, IIdentityServerBuilder builder);
         void AddClients(IServiceCollection services, IIdentityServerBuilder builder);
         void AddApiResources(IServiceCollection services, IIdentityServerBuilder builder);
         void AddOperationalStore(IServiceCollection services, IIdentityServerBuilder builder);
         void AddSigningServices(IServiceCollection services, IIdentityServerBuilder builder);
+        Action<IdentityServerOptions> GetIdentityServerOptions();
     }
     public static class AspNetCoreExtensions
     {
+        public static Action<IdentityServerOptions> GetIdentityServerOptions()
+        {
+            Action<IdentityServerOptions> identityServerOptions = options =>
+            {
+                options.InputLengthRestrictions.RefreshToken = 256;
+            };
+            return identityServerOptions;
+        }
         public static void AddExtensionGrantsRollup(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             IExtensionGrantsRollupRegistrations extensionGrantsRollupRegistrations)
         {
             services.AddObjectContainer();  // use this vs a static to cache class data.
@@ -43,17 +53,17 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
                                            */
 
 
-
+            Action<IdentityServerOptions> identityServerOptions = extensionGrantsRollupRegistrations.GetIdentityServerOptions();
             var builder = services
-              .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; });
-           extensionGrantsRollupRegistrations.AddIdentityResources(services,builder);
-           extensionGrantsRollupRegistrations.AddClients(services, builder);
-           extensionGrantsRollupRegistrations.AddApiResources(services, builder);
-           /*
-             .AddInMemoryIdentityResources(identityResources)
-              .AddInMemoryApiResources(apiResources)
-              .AddInMemoryClientsExtra(clients)
-            */
+              .AddIdentityServer(identityServerOptions);
+            extensionGrantsRollupRegistrations.AddIdentityResources(services, builder);
+            extensionGrantsRollupRegistrations.AddClients(services, builder);
+            extensionGrantsRollupRegistrations.AddApiResources(services, builder);
+            /*
+              .AddInMemoryIdentityResources(identityResources)
+               .AddInMemoryApiResources(apiResources)
+               .AddInMemoryClientsExtra(clients)
+             */
 
             builder
                .AddIdentityServer4Extras()
@@ -115,7 +125,7 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
             builder.AddPluginHostClientSecretValidator();
             builder.AddNoSecretRefreshClientSecretValidator();
 
-            builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
+            // builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
             builder.SwapOutTokenResponseGenerator();
             builder.SwapOutDefaultTokenService();
             builder.SwapOutScopeValidator();
@@ -135,7 +145,7 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
             services.AddIdentityServerRequestTrackerMiddleware();
 
             // my configurations
-       //     services.RegisterP7CoreConfigurationServices(configuration);
+            //     services.RegisterP7CoreConfigurationServices(configuration);
 
         }
     }
