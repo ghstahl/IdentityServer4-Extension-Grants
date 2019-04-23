@@ -24,8 +24,7 @@ namespace IdentityServer4Extras.Extensions
             IEnumerable<Client> clients)
         {
             builder.Services.AddSingleton(clients);
-
-            builder.AddClientStore<InMemoryClientStore>();
+            builder.AddInMemoryClientStoreExtra();
 
             var existingCors = builder.Services.Where(x => x.ServiceType == typeof(ICorsPolicyService)).LastOrDefault();
             if (existingCors != null &&
@@ -57,7 +56,7 @@ namespace IdentityServer4Extras.Extensions
             builder.Services.AddTransient<IClientSecretValidatorPlugin, NoSecretRefreshClientSecretValidator>();
             return builder;
         }
-       
+
         public static IIdentityServerBuilder AddInMemoryClientStoreExtra(this IIdentityServerBuilder builder)
         {
             builder.Services.RemoveAll<IClientStore>();

@@ -8,6 +8,7 @@
     <PackageLicenseUrl>https://github.com/ghstahl/IdentityServer4-Extension-Grants/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/ghstahl/IdentityServer4-Extension-Grants/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ghstahl/IdentityServer4-Extension-Grants/</RepositoryUrl>
+    <RootNamespace>IdentityServer4ExtensionGrants.Rollup</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="3.10.7" />
@@ -24,16 +25,14 @@
     <PackageReference Include="RSAKeyVaultProvider" Version="1.1.22" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.600" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityServer4ExtensionGrants.RollupShadow\P7Corp.IdentityServer4ExtensionGrants.RollupShadow.csproj" />
+  </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="echo -rootDir $(SolutionDir)..\ &#xD;&#xA;echo -targetDir $(TargetDir) &#xD;&#xA;echo -projectDir $(ProjectDir)&#xD;&#xA;&#xD;&#xA;powershell -NoProfile -ExecutionPolicy RemoteSigned -file $(SolutionDir)..\tools\repack.ps1                -rootDir $(SolutionDir)..\  -targetDir $(TargetDir) -projectDir $(ProjectDir)&#xD;&#xA;&#xD;&#xA;" />
   </Target>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="rd /s /q &quot;$(TargetDir)&quot;" />
   </Target>
-  <ItemGroup>
-    <ProjectReference Include="..\IdentityServer4ExtensionGrants.RollupShadow\IdentityServer4ExtensionGrants.RollupShadow.csproj">
-      <PrivateAssets>all</PrivateAssets>
-    </ProjectReference>
-  </ItemGroup>
   
 </Project>

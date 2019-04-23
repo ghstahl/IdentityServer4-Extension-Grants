@@ -21,13 +21,13 @@
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.5.1" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="P7Core.ObjectContainers" Version="1.0.46" />
     <PackageReference Include="RSAKeyVaultProvider" Version="1.1.22" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
-    <ProjectReference Include="..\IdentityServer4Source\2.4.0\IdentityServer4\IdentityServer4.csproj" />
-    <ProjectReference Include="..\P7Core.ObjectContainers\P7Core.ObjectContainers.csproj" />
+    <ProjectReference Include="..\IdentityServer4Extras\P7Corp.IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\IdentityServer4Source\2.4.0\IdentityServer4\P7Corp.IdentityServer4.csproj" />
   </ItemGroup>
 
 </Project>

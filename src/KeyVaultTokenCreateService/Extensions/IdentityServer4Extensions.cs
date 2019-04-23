@@ -13,7 +13,7 @@ namespace P7IdentityServer4.Extensions
             this IIdentityServerBuilder builder)
         {
             builder.Services.RemoveAll<ITokenCreationService>();
-            builder.Services.TryAddSingleton<ITokenCreationService, MyDefaultTokenCreationService>();
+            builder.Services.AddTransient<ITokenCreationService, MyDefaultTokenCreationService>();
 
             return builder;
         }

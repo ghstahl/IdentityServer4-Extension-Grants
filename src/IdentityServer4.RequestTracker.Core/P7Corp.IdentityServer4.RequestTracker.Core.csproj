@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>IdentityServerRequestTracker</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="P7Core.ObjectContainers" Version="1.0.46" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityServer4ExtensionGrants.P7Core\P7Corp.P7Core.csproj" />
+    <ProjectReference Include="..\IdentityServer4Source\2.4.0\IdentityServer4\P7Corp.IdentityServer4.csproj" />
+  </ItemGroup>
+
+</Project>

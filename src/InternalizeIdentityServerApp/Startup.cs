@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using IdentityServer4.Configuration;
 using IdentityServer4ExtensionGrants.Rollup.Extensions;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -29,7 +30,7 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace InternalizeIdentityServerApp
 {
-    public class Startup: IExtensionGrantsRollupRegistrations
+    public class Startup : IExtensionGrantsRollupRegistrations
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         public IConfiguration Configuration { get; }
@@ -45,7 +46,7 @@ namespace InternalizeIdentityServerApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-          
+
             services.AddOptions();
             services.AddCors(options =>
             {
@@ -97,7 +98,7 @@ namespace InternalizeIdentityServerApp
                 {
                     Version = "v1",
                     Title = "ToDo API"
-                   
+
                 });
 
                 // Set the comments path for the Swagger JSON and UI.
@@ -126,7 +127,7 @@ namespace InternalizeIdentityServerApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
+
             }
             else
             {
@@ -211,6 +212,16 @@ namespace InternalizeIdentityServerApp
             {
                 builder.AddDeveloperSigningCredential();
             }
+        }
+
+        public Action<IdentityServerOptions> GetIdentityServerOptions()
+        {
+            Action<IdentityServerOptions> identityServerOptions = options =>
+            {
+                options.InputLengthRestrictions.RefreshToken = 256;
+                options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);
+            };
+            return identityServerOptions;
         }
     }
 }

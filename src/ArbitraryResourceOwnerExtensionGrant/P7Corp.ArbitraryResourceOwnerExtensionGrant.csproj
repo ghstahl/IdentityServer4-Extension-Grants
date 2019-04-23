@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>ArbitraryResourceOwnerExtensionGrant</RootNamespace>
+    <AssemblyName>P7Corp.ArbitraryResourceOwnerExtensionGrant</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityModelExtras\P7Corp.IdentityModelExtras.csproj" />
+    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\P7Corp.IdentityServer4.RequestTracker.Core.csproj" />
+    <ProjectReference Include="..\IdentityServer4Extras\P7Corp.IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\ProfileServiceManager\P7Corp.ProfileServiceManager.csproj" />
+  </ItemGroup>
+
+</Project>
