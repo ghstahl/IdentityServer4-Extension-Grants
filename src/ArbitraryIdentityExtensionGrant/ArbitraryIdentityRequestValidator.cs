@@ -45,7 +45,6 @@ namespace ArbitraryIdentityExtensionGrant
                                                                   (_requiredArbitraryArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "client_id",
                                                                           "subject"
                                                                       });
         private static List<string> _notAllowedArbitraryClaims;

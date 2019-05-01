@@ -21,7 +21,6 @@ namespace ArbitraryNoSubjectExtensionGrant
                                                                   (_requiredArbitraryArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "client_id",
                                                                           "arbitrary_claims"
                                                                       });
 
