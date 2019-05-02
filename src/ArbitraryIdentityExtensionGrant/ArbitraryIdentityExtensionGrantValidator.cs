@@ -25,10 +25,6 @@ using Microsoft.Extensions.Options;
 
 namespace ArbitraryIdentityExtensionGrant
 {
-    public class ArbitraryIdentityExtensionGrantOptions
-    {
-        public string IdentityProvider { get; set; }
-    }
     public class ArbitraryIdentityExtensionGrantValidator : IExtensionGrantValidator
     {
         private readonly ILogger _logger;
