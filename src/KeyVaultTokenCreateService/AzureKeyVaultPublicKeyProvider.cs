@@ -23,7 +23,7 @@ namespace P7IdentityServer4
         /// Initializes a new instance of the <see cref="AzureKeyVaultTokenSigningService"/> class.
         /// </summary>
         /// <param name="options">The options.</param>
-        public AzureKeyVaultPublicKeyProvider(IOptions<AzureKeyVaultTokenSigningServiceOptions> options):this(options.Value)
+        public AzureKeyVaultPublicKeyProvider(IOptions<AzureKeyVaultTokenSigningServiceOptions> options) : this(options.Value)
         {
         }
 
@@ -44,8 +44,8 @@ namespace P7IdentityServer4
                 _jwks = new List<JsonWebKey>();
                 var keyBundles = await GetKeyBundleVersionsAsync();
                 var query = from item in keyBundles
-                    where item.Attributes.Enabled != null && (bool) item.Attributes.Enabled
-                    select item;
+                            where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
+                            select item;
                 keyBundles = query.ToList();
                 foreach (var keyBundle in keyBundles)
                 {

@@ -21,9 +21,14 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ArbitraryIdentityExtensionGrant
 {
+    public class ArbitraryIdentityExtensionGrantOptions
+    {
+        public string IdentityProvider { get; set; }
+    }
     public class ArbitraryIdentityExtensionGrantValidator : IExtensionGrantValidator
     {
         private readonly ILogger _logger;
@@ -31,17 +36,20 @@ namespace ArbitraryIdentityExtensionGrant
         private readonly IdentityServerOptions _options;
         private ValidatedTokenRequest _validatedRequest;
         private ArbitraryIdentityRequestValidator _arbitraryIdentityRequestValidator;
-        private PrincipalAugmenter _principalAugmenter; 
+        private PrincipalAugmenter _principalAugmenter;
         private ITokenValidator _tokenValidator;
         private IServiceProvider _serviceProvider;
         private IClientSecretValidator _clientValidator;
         private IHttpContextAccessor _httpContextAccessor;
+        private ArbitraryIdentityExtensionGrantOptions _arbitraryIdentityExtensionGrantOptions;
+
 
         public ArbitraryIdentityExtensionGrantValidator(
             IServiceProvider serviceProvider,
             IClientSecretValidator clientValidator,
             ITokenValidator tokenValidator,
             IdentityServerOptions options,
+            IOptions<ArbitraryIdentityExtensionGrantOptions> arbitraryIdentityExtensionGrantOptions,
             IResourceStore resourceStore,
             ILogger<ArbitraryIdentityExtensionGrantValidator> logger,
             ArbitraryIdentityRequestValidator arbitraryIdentityRequestValidator,
@@ -53,6 +61,7 @@ namespace ArbitraryIdentityExtensionGrant
             _tokenValidator = tokenValidator;
             _logger = logger;
             _options = options;
+            _arbitraryIdentityExtensionGrantOptions = arbitraryIdentityExtensionGrantOptions.Value;
             _resourceStore = resourceStore;
             _arbitraryIdentityRequestValidator = arbitraryIdentityRequestValidator;
             _principalAugmenter = principalAugmenter;
@@ -122,18 +131,18 @@ namespace ArbitraryIdentityExtensionGrant
             {
                 var validateAccessToken = await _tokenValidator.ValidateAccessTokenAsync(accessToken);
                 var queryClaims = from item in validateAccessToken.Claims
-                    where item.Type == JwtClaimTypes.Subject
+                                  where item.Type == JwtClaimTypes.Subject
                                   select item.Value;
                 subject = queryClaims.FirstOrDefault();
 
                 originAuthTimeClaim = (from item in validateAccessToken.Claims
-                                      where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
-                    select item).FirstOrDefault();
+                                       where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
+                                       select item).FirstOrDefault();
                 if (originAuthTimeClaim == null)
                 {
                     var authTimeClaim = (from item in validateAccessToken.Claims
-                        where item.Type == JwtClaimTypes.AuthenticationTime
-                        select item).FirstOrDefault();
+                                         where item.Type == JwtClaimTypes.AuthenticationTime
+                                         select item).FirstOrDefault();
                     originAuthTimeClaim = new
                         Claim($"origin_{JwtClaimTypes.AuthenticationTime}",
                             authTimeClaim.Value);
@@ -150,14 +159,15 @@ namespace ArbitraryIdentityExtensionGrant
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, subject),
-                new Claim("sub", subject)
+                new Claim("sub", subject),
+                new Claim(JwtClaimTypes.IdentityProvider,_arbitraryIdentityExtensionGrantOptions.IdentityProvider)
             };
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
             _principalAugmenter.AugmentPrincipal(principal);
             var userClaimsFinal = new List<Claim>();
 
- 
+
             // optional stuff;
             var accessTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
             if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
@@ -199,9 +209,13 @@ namespace ArbitraryIdentityExtensionGrant
             {
                 userClaimsFinal.Add(originAuthTimeClaim);
             }
-            context.Result = new GrantValidationResult(principal.GetSubjectId(), ArbitraryIdentityExtensionGrant.Constants.ArbitraryIdentity, userClaimsFinal);
+            context.Result = new GrantValidationResult(
+                principal.GetSubjectId(),
+                ArbitraryIdentityExtensionGrant.Constants.ArbitraryIdentity,
+                userClaimsFinal,
+                _arbitraryIdentityExtensionGrantOptions.IdentityProvider);
         }
-        
+
         private void LogError(string message = null, params object[] values)
         {
             if (message.IsPresent())

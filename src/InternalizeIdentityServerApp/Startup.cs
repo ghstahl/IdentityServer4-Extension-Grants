@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using ArbitraryIdentityExtensionGrant;
 using IdentityServer4.Configuration;
 using IdentityServer4ExtensionGrants.Rollup.Extensions;
 using IdentityServer4Extras;
@@ -60,7 +61,7 @@ namespace InternalizeIdentityServerApp
             services.AddExtensionGrantsRollup(this);
 
 
-
+            services.Configure<ArbitraryIdentityExtensionGrantOptions>(options => { options.IdentityProvider = "Demo"; });
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
