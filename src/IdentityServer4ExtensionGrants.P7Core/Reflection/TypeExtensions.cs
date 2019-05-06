@@ -18,7 +18,7 @@ namespace P7Core.Reflection
         public static IEnumerable<Type> WithCustomAttribute<TAttributeType>(this IEnumerable<Type> master)
         {
             return
-                master.Where(type => IntrospectionExtensions.GetTypeInfo(type).GetCustomAttributes(typeof(TAttributeType), true).Any())
+                master.Where(type => type.GetTypeInfo().GetCustomAttributes(typeof(TAttributeType), true).Any())
                     .ToList();
         }
 
@@ -42,16 +42,16 @@ namespace P7Core.Reflection
 
             return query;
         }
-        public static IEnumerable<T> GetConstantsValues<T>(this IEnumerable<FieldInfo> fieldInfos) where T : class
+        public static IEnumerable<T> GetConstantsValues<T>(this IEnumerable<FieldInfo> fieldInfos) 
         {
             var query = from fi in fieldInfos
                 where fi.FieldType == typeof(T)
-                select fi.GetRawConstantValue() as T;
+                select (T)fi.GetRawConstantValue();
 
             return query;
         }
 
-        public static IEnumerable<T> GetConstantsValues<T>(this Type type) where T : class
+        public static IEnumerable<T> GetConstantsValues<T>(this Type type) 
         {
             var fieldInfos = type.GetConstants<T>();
             return fieldInfos.GetConstantsValues<T>();

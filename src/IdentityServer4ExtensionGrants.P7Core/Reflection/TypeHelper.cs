@@ -34,29 +34,6 @@ namespace P7Core.Reflection
         }
 
 
-        public static IEnumerable<Type> FindTypesInAssembly(Assembly assembly, bool includeSubClass = false)
-        {
-            // Go through all assemblies referenced by the application and search for types matching a predicate
-            IEnumerable<Type> typesSoFar = Type.EmptyTypes;
-            Predicate<Type> predicate = TypeHelper<T>.IsType;
-            Type[] typesInAsm;
-            try
-            {
-                typesInAsm = assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                typesInAsm = ex.Types;
-            }
-            typesSoFar = typesSoFar.Concat(typesInAsm);
-
-            return
-                typesSoFar.Where(
-                    type =>
-                        type.IsPublicClass() &&
-                        (predicate(type) || (!includeSubClass || IsSubclassOf(type))));
-        }
-
         public static IEnumerable<Type> FindTypesInAssembly(Assembly assembly, Predicate<Type> predicate)
         {
             // Go through all assemblies referenced by the application and search for types matching a predicate
@@ -118,15 +95,8 @@ namespace P7Core.Reflection
 
         public static IEnumerable<Type> FindTypesWithCustomAttribute<TAttributeType>(IEnumerable<Type> toBeEvaluatedTypes)
         {
-            var types = new List<Type>();
-            foreach (Type type in toBeEvaluatedTypes)
-            {
-                if (type.GetTypeInfo().GetCustomAttributes(typeof(TAttributeType), true).Any())
-                {
-                    types.Add(type);
-                }
-            }
-            return types;
+            return toBeEvaluatedTypes.WithCustomAttribute<TAttributeType>();
+
         }
     }
 }
