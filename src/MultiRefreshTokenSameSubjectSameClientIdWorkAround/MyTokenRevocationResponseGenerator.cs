@@ -61,7 +61,7 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
         /// <param name="refreshTokenStore">The refresh token store.</param>
         /// <param name="logger">The logger.</param>
         public MyTokenRevocationResponseGenerator(
-            IReferenceTokenStore referenceTokenStore, 
+            IReferenceTokenStore referenceTokenStore,
             IRefreshTokenStore refreshTokenStore,
             ITokenValidator tokenValidator,
             IClientStoreExtra clientStoreExtra,
@@ -143,8 +143,8 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                     {
                         var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
                         var queryClientIds = from item in clientExtras
-                            where item.Namespace == clientExtra.Namespace
-                            select item.ClientId;
+                                             where item.Namespace == clientExtra.Namespace
+                                             select item.ClientId;
                         foreach (var clienId in queryClientIds)
                         {
                             await rts.RemoveRefreshTokensAsync(subject, clienId);
@@ -199,8 +199,8 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                         return false;
                     }
                     var queryClaims = from item in validateAccessToken.Claims
-                        where item.Type == JwtClaimTypes.Subject
-                        select item.Value;
+                                      where item.Type == JwtClaimTypes.Subject
+                                      select item.Value;
                     subject = queryClaims.FirstOrDefault();
                 }
 
@@ -211,11 +211,11 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                     var rts = RefreshTokenStore as IRefreshTokenStore2;
                     var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
                     var queryClientIds = from item in clientExtras
-                        where item.Namespace == clientExtra.Namespace
-                        select item.ClientId;
-                    foreach (var clienId in queryClientIds)
+                                         where item.Namespace == clientExtra.Namespace
+                                         select item.ClientId;
+                    foreach (var clientId in queryClientIds)
                     {
-                        await rts.RemoveRefreshTokensAsync(subject, clienId);
+                        await rts.RemoveRefreshTokensAsync(subject, clientId);
                     }
                 }
 
@@ -252,12 +252,13 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                     {
                         var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
                         var queryClientIds = from item in clientExtras
-                            where item.Namespace == clientExtra.Namespace
-                            select item.ClientId;
+                                             where item.Namespace == clientExtra.Namespace
+                                             select item.ClientId;
 
                         foreach (var clientId in queryClientIds)
                         {
                             await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, clientId);
+                            await refreshTokenStore2.RemoveRefreshTokensAsync(token.SubjectId, clientId);
                         }
                     }
                     await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, token.SubjectId);
