@@ -9,7 +9,7 @@ namespace P7Core.Extensions
     {
         public static IServiceCollection AddP7Core(this IServiceCollection services)
         {
-
+            // placeholder for future adds
             return services;
         }
     }

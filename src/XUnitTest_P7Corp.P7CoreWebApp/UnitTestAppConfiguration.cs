@@ -31,7 +31,7 @@ namespace XUnitTest_P7Corp.P7CoreWebApp
         public async Task Test_Random_upper_lower_case_GET_success()
         {
             var client = _fixture.Client;
-            var req = new HttpRequestMessage(HttpMethod.Get, "/api/tEsThArNeSs")
+            var req = new HttpRequestMessage(HttpMethod.Get, "/api/tEsThArNeSs/index")
             {
                 // Content = new FormUrlEncodedContent(dict)
             };
@@ -45,6 +45,28 @@ namespace XUnitTest_P7Corp.P7CoreWebApp
             values.Count.ShouldBeGreaterThan(0);
 
         }
+
+        [Fact]
+        public async Task Test_GetLazyServicesNamesAsync_success()
+        {
+            var client = _fixture.Client;
+            var req = new HttpRequestMessage(HttpMethod.Get, "/api/tEsThArNeSs/LazyServicesNames")
+            {
+                // Content = new FormUrlEncodedContent(dict)
+            };
+            var response = await client.SendAsync(req);
+            response.StatusCode.ShouldBe(System.Net.HttpStatusCode.OK);
+            var jsonString = await response.Content.ReadAsStringAsync();
+            jsonString.ShouldNotBeNullOrWhiteSpace();
+
+            var values = JsonConvert.DeserializeObject<List<string>>(jsonString);
+            values.ShouldNotBeNull();
+            values.Count.ShouldBeGreaterThan(0);
+
+        }
+
+
+
 
     }
 }

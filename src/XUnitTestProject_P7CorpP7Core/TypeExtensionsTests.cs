@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using P7Core.Reflection;
 using P7Core.Writers;
@@ -19,20 +20,41 @@ namespace XUnitTestProject_P7CorpP7Core
     }
     public class SomeBaseClass { }
     [CustomAttribute]
-    public class SomePublicClass: SomeBaseClass
+    public class SomePublicClass : SomeBaseClass
     {
         public const string Dog = "dog";
         public const int Age = 1;
         public string Cat { get; set; }
-   
+
     }
     class SomePrivateClass { }
     public abstract class SomeAbstractClass { }
-    public interface  ISomePublicInterface { }
+    public interface ISomePublicInterface { }
     public struct SomeStruct { }
     public enum SomeEnum { }
     public class TypeExtensionsTests
     {
+        [Fact]
+        void Test_FindTypesInAssemblies()
+        {
+            List<Assembly> assemblies = new List<Assembly>() { typeof(SomeBaseClass).Assembly };
+            Predicate<Type> predicate = TypeHelper<SomePublicClass>.IsType;
+            TypeHelper<SomePublicClass>.FindTypesInAssemblies(
+                    assemblies, predicate)
+                .ToList().Count.ShouldBeGreaterThan(0);
+        }
+
+        [Fact]
+        void Test_FindTypesInAssemblies_IsPublicClassType()
+        {
+            List<Assembly> assemblies = new List<Assembly>() { typeof(SomeBaseClass).Assembly };
+            Predicate<Type> predicate = TypeHelper<Type>.IsPublicClassType;
+            TypeHelper<SomePublicClass>.FindTypesInAssemblies(
+                    assemblies, predicate)
+                .ToList().Count.ShouldBeGreaterThan(0);
+        }
+
+
         [Fact]
         void Test_FindDerivedTypes()
         {
@@ -44,7 +66,8 @@ namespace XUnitTestProject_P7CorpP7Core
         [Fact]
         void Test_FindTypesInAssembly2()
         {
-            TypeHelper<SomePublicClass>.FindTypesInAssembly2(typeof(SomeBaseClass).Assembly)
+            TypeHelper<SomePublicClass>.FindTypesInAssembly2(
+                    typeof(SomeBaseClass).Assembly)
                 .ToList().Count.ShouldBeGreaterThan(0);
         }
         [Fact]
@@ -70,7 +93,7 @@ namespace XUnitTestProject_P7CorpP7Core
                 return true;
             });
             types.Any().ShouldBeTrue();
-            
+
         }
         [Fact]
         void Test_get_WithCustomAttribute_success()
@@ -83,7 +106,7 @@ namespace XUnitTestProject_P7CorpP7Core
 
             constants.ToList().Count.ShouldBeGreaterThan(0);
 
-            TypeHelper<Type>.FindTypesWithCustomAttribute< CustomAttribute>(master).ToList().Count.ShouldBeGreaterThan(0);
+            TypeHelper<Type>.FindTypesWithCustomAttribute<CustomAttribute>(master).ToList().Count.ShouldBeGreaterThan(0);
         }
         [Fact]
         void Test_get_WithCustomAttribute_fail()
@@ -123,7 +146,7 @@ namespace XUnitTestProject_P7CorpP7Core
         [Fact]
         void Test_is_public_true()
         {
-            TypeHelper<SomePublicClass>.IsPublicClassType().ShouldBeTrue();
+            TypeHelper<Type>.IsPublicClassType(typeof(SomePublicClass)).ShouldBeTrue();
             typeof(SomePublicClass).IsPublicClass().ShouldBeTrue();
         }
 

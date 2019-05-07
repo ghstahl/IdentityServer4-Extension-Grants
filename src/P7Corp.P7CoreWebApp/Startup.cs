@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using IdentityModelExtras;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,11 +11,24 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using P7Core;
 using P7Core.Extensions;
+using P7Corp.P7CoreWebApp.Services;
 
 namespace P7Corp.P7CoreWebApp
 {
+    public class DefaultHttpClientFactory : IDefaultHttpClientFactory
+    {
+        private HttpClient _httpClient;
+        public HttpMessageHandler HttpMessageHandler { get; set; }
+
+        public HttpClient HttpClient
+        {
+            get { return _httpClient ?? (_httpClient = new HttpClient()); }
+            set { _httpClient = value; }
+        }
+    }
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -26,6 +41,17 @@ namespace P7Corp.P7CoreWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddP7Core();
+            services.TryAddTransient<IDefaultHttpClientFactory, DefaultHttpClientFactory>();
+
+            services.AddLazyTransient<ISomeLazyTransient, SomeTransient>();
+            services.AddLazySingleton<ISomeLazySingleton, SomeSingleton>();
+            services.AddLazyScoped<ISomeLazyScoped, SomeScoped>();
+
+            services.AddTransient<ISomeTransient, SomeTransient>();
+            services.AddSingleton<ISomeSingleton, SomeSingleton>();
+            services.AddScoped<ISomeScoped, SomeScoped>();
+
             services.RegisterP7CoreConfigurationServices(Configuration);
             services.Configure<CookiePolicyOptions>(options =>
             {

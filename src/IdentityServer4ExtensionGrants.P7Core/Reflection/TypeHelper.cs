@@ -8,10 +8,10 @@ namespace P7Core.Reflection
     public static class TypeHelper<T>
     {
 
-        public static bool IsPublicClassType()
+        public static bool IsPublicClassType(Type type)
         {
-            Type type = typeof(T);
-            return IsType(type) && type.IsPublicClass();
+
+            return type.IsPublicClass();
         }
 
         public static bool IsType(Type type)
@@ -28,13 +28,14 @@ namespace P7Core.Reflection
         {
             var baseType = typeof(T);
             var query = from type in assembly.GetTypes()
-                where type != typeof(T) && baseType.IsAssignableFrom(type)
-                select type;
+                        where type != typeof(T) && baseType.IsAssignableFrom(type)
+                        select type;
             return query;
         }
 
 
-        public static IEnumerable<Type> FindTypesInAssembly(Assembly assembly, Predicate<Type> predicate)
+        public static IEnumerable<Type> FindTypesInAssembly(Assembly assembly,
+            Predicate<Type> predicate)
         {
             // Go through all assemblies referenced by the application and search for types matching a predicate
             IEnumerable<Type> typesSoFar = Type.EmptyTypes;
@@ -80,7 +81,8 @@ namespace P7Core.Reflection
             return typesSoFar.Where(type => type.IsPublicClass() && predicate(type));
         }
 
-        public static IEnumerable<Type> FindTypesInAssemblies(IEnumerable<Assembly> assemblies,
+        public static IEnumerable<Type> FindTypesInAssemblies(
+            IEnumerable<Assembly> assemblies,
             Predicate<Type> predicate)
         {
             // Go through all assemblies referenced by the application and search for types matching a predicate
