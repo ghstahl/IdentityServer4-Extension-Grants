@@ -50,6 +50,39 @@ namespace XUnitTestProject_ExtensionGrantsApp
             result.ExpiresIn.ShouldNotBeNull();
         }
         [Fact]
+        public async Task Mint_arbitrary_resource_owner_Lifetime_outofbounds()
+        {
+
+            var client = new TokenClient(
+                _fixture.TestServer.BaseAddress + "connect/token",
+                ClientId,
+                _fixture.MessageHandler);
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
+                    "Ratt"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+                },
+
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "2592000"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.Error.ShouldNotBeNullOrEmpty();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
+        }
+        [Fact]
         public async Task Mint_arbitrary_resource_owner_missing_subject_and_token()
         {
 
