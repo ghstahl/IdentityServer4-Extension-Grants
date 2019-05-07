@@ -22,17 +22,29 @@ namespace InternalizeIdentityServerApp
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     var environmentName = hostingContext.HostingEnvironment.EnvironmentName;
-                    config
-                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                        .AddJsonFile("appsettings.redis.json", optional: false, reloadOnChange: true)
-                        .AddJsonFile("appsettings.keyVault.json", optional: false, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{environmentName}.IdentityResources.json", optional: true)
-                        .AddJsonFile($"appsettings.{environmentName}.ApiResources.json", optional: true)
-                        .AddJsonFile($"appsettings.{environmentName}.Clients.json", optional: true)
-                        .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
-                        .AddUserSecrets<Startup>();
-                       
+                    LoadConfigurations(config, environmentName);
                 })
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.ClearProviders();
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                    logging.AddEventSourceLogger();
+                });
+        public static void LoadConfigurations(IConfigurationBuilder config, string environmentName)
+        {
+            config
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.redis.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.keyVault.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{environmentName}.IdentityResources.json", optional: true)
+                .AddJsonFile($"appsettings.{environmentName}.ApiResources.json", optional: true)
+                .AddJsonFile($"appsettings.{environmentName}.Clients.json", optional: true)
+                .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
+                .AddUserSecrets<Startup>();
+
+        }
     }
 }
