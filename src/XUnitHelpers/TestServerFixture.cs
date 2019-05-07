@@ -12,7 +12,7 @@ namespace XUnitHelpers
 {
     public abstract class TestServerFixture<TStartup> : IDisposable where TStartup : class
     {
-        private readonly TestServer _testServer;
+        public readonly TestServer TestServer;
         public HttpClient Client { get; }
         public HttpMessageHandler MessageHandler { get; }
 
@@ -31,7 +31,7 @@ namespace XUnitHelpers
                     {
                         return new TestDefaultHttpClientFactory()
                         {
-                            TestServer = _testServer
+                            TestServer = TestServer
                         };
                     });
                 })
@@ -43,9 +43,9 @@ namespace XUnitHelpers
                 })
                 .UseStartup<TStartup>(); // Uses Start up class from your API Host project to configure the test server
 
-            _testServer = new TestServer(builder);
-            Client = _testServer.CreateClient();
-            MessageHandler = _testServer.CreateHandler();
+            TestServer = new TestServer(builder);
+            Client = TestServer.CreateClient();
+            MessageHandler = TestServer.CreateHandler();
 
         }
 
@@ -60,7 +60,7 @@ namespace XUnitHelpers
         public void Dispose()
         {
             Client.Dispose();
-            _testServer.Dispose();
+            TestServer.Dispose();
         }
     }
 }
