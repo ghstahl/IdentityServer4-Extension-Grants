@@ -148,12 +148,17 @@ namespace ArbitraryResourceOwnerExtensionGrant
             var accessTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
             if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
             {
-                var accessTokenLifetime = Int32.Parse(accessTokenLifetimeOverride);
-                if (accessTokenLifetime > 0 && accessTokenLifetime <= context.Request.AccessTokenLifetime)
+                int accessTokenLifetime = 0;
+                bool error = true;
+                if (Int32.TryParse(accessTokenLifetimeOverride, out accessTokenLifetime))
                 {
-                    context.Request.AccessTokenLifetime = accessTokenLifetime;
+                    if (accessTokenLifetime > 0 && accessTokenLifetime <= context.Request.AccessTokenLifetime)
+                    {
+                        context.Request.AccessTokenLifetime = accessTokenLifetime;
+                        error = false;
+                    }
                 }
-                else
+                if (error)
                 {
                     var errorDescription =
                         $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and <= configured AccessTokenLifetime.";
