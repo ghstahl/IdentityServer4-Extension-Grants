@@ -168,12 +168,18 @@ namespace ArbitraryIdentityExtensionGrant
             var accessTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
             if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
             {
-                var accessTokenLifetime = Int32.Parse(accessTokenLifetimeOverride);
-                if (accessTokenLifetime > 0 && accessTokenLifetime <= context.Request.AccessTokenLifetime)
+                int accessTokenLifetime = 0;
+                bool error = true;
+                if (Int32.TryParse(accessTokenLifetimeOverride, out accessTokenLifetime))
                 {
-                    context.Request.AccessTokenLifetime = accessTokenLifetime;
+                    if (accessTokenLifetime > 0 && accessTokenLifetime <= context.Request.AccessTokenLifetime)
+                    {
+                        context.Request.AccessTokenLifetime = accessTokenLifetime;
+                        error = false;
+                    }
                 }
-                else
+
+                if (error)
                 {
                     var errorDescription =
                         $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and <= configured AccessTokenLifetime.";
@@ -186,12 +192,18 @@ namespace ArbitraryIdentityExtensionGrant
             var idTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.IdTokenLifetime);
             if (!string.IsNullOrWhiteSpace(idTokenLifetimeOverride))
             {
-                var idTokenLifetime = Int32.Parse(idTokenLifetimeOverride);
-                if (idTokenLifetime > 0 && idTokenLifetime <= context.Request.Client.IdentityTokenLifetime)
+                int idTokenLifetime = 0;
+                bool error = true;
+                if (Int32.TryParse(idTokenLifetimeOverride, out idTokenLifetime))
                 {
-                    context.Request.Client.IdentityTokenLifetime = idTokenLifetime;
+                    if (idTokenLifetime > 0 && idTokenLifetime <= context.Request.Client.IdentityTokenLifetime)
+                    {
+                        context.Request.Client.IdentityTokenLifetime = idTokenLifetime;
+                        error = false;
+                    }
                 }
-                else
+
+                if (error)
                 {
                     var errorDescription =
                         $"{Constants.IdTokenLifetime} out of range.   Must be > 0 and <= configured IdentityTokenLifetime.";

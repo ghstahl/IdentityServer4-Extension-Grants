@@ -110,5 +110,70 @@ namespace XUnitTestProject_ExtensionGrantsApp
             result.AccessToken.ShouldNotBeNullOrEmpty();
             result.RefreshToken.ShouldBeNull();
         }
+        [Fact]
+        public async Task Mint_arbitrary_identity_with_outofbounds_AccessTokenLifetime()
+        {
+            var client = new TokenClient(
+                _fixture.TestServer.BaseAddress + "connect/token",
+                ClientId,
+                _fixture.MessageHandler);
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryIdentity},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.Subject, "Ratt"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+                },
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "320000000"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.ErrorDescription.ShouldNotBeNullOrEmpty();
+            result.Error.ShouldNotBeNullOrEmpty();
+
+
+        }
+        [Fact]
+        public async Task Mint_arbitrary_identity_with_outofbounds_IdTokenLifetime()
+        {
+            var client = new TokenClient(
+                _fixture.TestServer.BaseAddress + "connect/token",
+                ClientId,
+                _fixture.MessageHandler);
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryIdentity},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"nitro metal"
+                },
+                {
+                    ArbitraryIdentityExtensionGrant.Constants.Subject, "Ratt"
+                },
+                {
+                    ArbitraryIdentityExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+                },
+                {ArbitraryIdentityExtensionGrant.Constants.AccessTokenLifetime, "3600"},
+                {ArbitraryIdentityExtensionGrant.Constants.IdTokenLifetime, "3200000001"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.ErrorDescription.ShouldNotBeNullOrEmpty();
+            result.Error.ShouldNotBeNullOrEmpty();
+
+
+        }
     }
 }
