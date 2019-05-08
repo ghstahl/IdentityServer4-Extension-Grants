@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -103,50 +104,14 @@ namespace ArbitraryIdentityExtensionGrant
             // check grant type
             /////////////////////////////////////////////
             var grantType = _validatedRequest.Raw.Get(OidcConstants.TokenRequest.GrantType);
-            if (grantType.IsMissing())
-            {
-                LogError("Grant type is missing");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
-            if (grantType.Length > _options.InputLengthRestrictions.GrantType)
-            {
-                LogError("Grant type is too long");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
+         
 
             _validatedRequest.GrantType = grantType;
             var resource = await _resourceStore.GetAllResourcesAsync();
 
             var subject = "";
-            Claim originAuthTimeClaim = null;
-            // if access_token exists, it wins.
-            var accessToken = context.Request.Raw.Get("access_token");
-            if (!string.IsNullOrWhiteSpace(accessToken))
-            {
-                var validateAccessToken = await _tokenValidator.ValidateAccessTokenAsync(accessToken);
-                var queryClaims = from item in validateAccessToken.Claims
-                                  where item.Type == JwtClaimTypes.Subject
-                                  select item.Value;
-                subject = queryClaims.FirstOrDefault();
-
-                originAuthTimeClaim = (from item in validateAccessToken.Claims
-                                       where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
-                                       select item).FirstOrDefault();
-                if (originAuthTimeClaim == null)
-                {
-                    var authTimeClaim = (from item in validateAccessToken.Claims
-                                         where item.Type == JwtClaimTypes.AuthenticationTime
-                                         select item).FirstOrDefault();
-                    originAuthTimeClaim = new
-                        Claim($"origin_{JwtClaimTypes.AuthenticationTime}",
-                            authTimeClaim.Value);
-
-                }
-
-            }
-
+          
+            
             if (string.IsNullOrWhiteSpace(subject))
             {
                 subject = context.Request.Raw.Get("subject");
@@ -212,11 +177,7 @@ namespace ArbitraryIdentityExtensionGrant
                     return;
                 }
             }
-            //userClaimsFinal.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryIdentityProfileService));
-            if (originAuthTimeClaim != null)
-            {
-                userClaimsFinal.Add(originAuthTimeClaim);
-            }
+          
             context.Result = new GrantValidationResult(
                 principal.GetSubjectId(),
                 ArbitraryIdentityExtensionGrant.Constants.ArbitraryIdentity,
@@ -224,6 +185,7 @@ namespace ArbitraryIdentityExtensionGrant
                 _arbitraryIdentityExtensionGrantOptions.IdentityProvider);
         }
 
+        [ExcludeFromCodeCoverage]
         private void LogError(string message = null, params object[] values)
         {
             if (message.IsPresent())

@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ArbitraryResourceOwnerExtensionGrant;
+using FakeItEasy;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.Contrib.CosmosDB.Entities;
+using Microsoft.Extensions.Logging;
 using Shouldly;
 using Xunit;
 
@@ -15,6 +18,19 @@ namespace XUnitTestProject_ExtensionGrantsApp
     {
         public string ClientId => "arbitrary-resource-owner-client";
         public string ClientSecret => "secret";
+
+        [Fact]
+        public void ArbitraryResourceOwnerExtensionGrantValidator_ValidateAsync_Exception()
+        {
+            var fakeLogger = A.Fake<ILogger<ArbitraryResourceOwnerExtensionGrantValidator>>();
+
+            var d = new ArbitraryResourceOwnerExtensionGrantValidator(
+                null, null, fakeLogger, null, null, null);
+
+            d.GrantType.ShouldNotBeNullOrWhiteSpace();
+            Should.Throw<Exception>(d.ValidateAsync(null));
+        }
+
         [Fact]
         public async Task Mint_arbitrary_resource_owner_with_offline_access()
         {

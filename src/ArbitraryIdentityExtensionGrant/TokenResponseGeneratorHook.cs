@@ -21,15 +21,14 @@ namespace ArbitraryIdentityExtensionGrant
     public class TokenResponseGeneratorHook : ITokenResponseGeneratorHook
     {
         private IClientStore Clients { get; set; }
-        private IResourceStore Resources { get; }
+     
         private ITokenService TokenService { get; set; }
         private ILogger Logger { get; set; }
 
-        public TokenResponseGeneratorHook(IClientStore clients, IResourceStore resources, ITokenService tokenService,
+        public TokenResponseGeneratorHook(IClientStore clients,  ITokenService tokenService,
             ILogger<TokenResponseGeneratorHook> logger)
         {
             Clients = clients;
-            Resources = resources;
             TokenService = tokenService;
             Logger = logger;
         }
