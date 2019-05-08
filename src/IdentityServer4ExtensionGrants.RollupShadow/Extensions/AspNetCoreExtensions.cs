@@ -15,7 +15,6 @@ using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using P7Core;
 using P7Core.ObjectContainers.Extensions;
 using P7IdentityServer4.Extensions;
-using ProfileServiceManager.Extensions;
 
 namespace IdentityServer4ExtensionGrants.Rollup.Extensions
 {
@@ -67,7 +66,6 @@ namespace IdentityServer4ExtensionGrants.Rollup.Extensions
 
             builder
                .AddIdentityServer4Extras()
-               .AddProfileServiceManager()
                .AddArbitraryOwnerResourceExtensionGrant()
                .AddArbitraryIdentityExtensionGrant()
                .AddArbitraryNoSubjectExtensionGrant();

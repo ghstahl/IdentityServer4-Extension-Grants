@@ -19,6 +19,7 @@ namespace XUnitTestProject_ExtensionGrantsApp
         public string ClientId => "arbitrary-resource-owner-client";
         public string ClientSecret => "secret";
 
+        
         [Fact]
         public void ArbitraryResourceOwnerExtensionGrantValidator_ValidateAsync_Exception()
         {

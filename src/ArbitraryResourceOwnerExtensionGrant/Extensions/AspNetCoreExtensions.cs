@@ -1,6 +1,5 @@
 ﻿using IdentityServer4Extras.Services;
 using Microsoft.Extensions.DependencyInjection;
-using ProfileServiceManager;
 
 namespace ArbitraryResourceOwnerExtensionGrant.Extensions
 {

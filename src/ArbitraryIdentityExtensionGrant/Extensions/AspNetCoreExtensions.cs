@@ -1,6 +1,5 @@
 ﻿using IdentityServer4Extras.Services;
 using Microsoft.Extensions.DependencyInjection;
-using ProfileServiceManager;
 
 namespace ArbitraryIdentityExtensionGrant.Extensions
 {
@@ -9,7 +8,6 @@ namespace ArbitraryIdentityExtensionGrant.Extensions
         public static void AddArbitraryIdentityExtentionGrantTypes(this IServiceCollection services)
         {
             services.AddTransient<ArbitraryIdentityRequestValidator>();
-        //    services.AddTransient<IProfileServicePlugin, ArbitraryIdentityProfileService>();
             services.AddTransient<ITokenResponseGeneratorHook, TokenResponseGeneratorHook>();
             services.AddTransient<ITokenServiceHookPlugin, TokenServiceHookPlugin>();
         }

@@ -21,6 +21,5 @@
     <ProjectReference Include="..\KeyVaultTokenCreateService\P7Corp.KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\P7Corp.MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
     <ProjectReference Include="..\IdentityServer4ExtensionGrants.P7Core\P7Corp.P7Core.csproj" />
-    <ProjectReference Include="..\ProfileServiceManager\P7Corp.ProfileServiceManager.csproj" />
   </ItemGroup>
 </Project>

@@ -14,7 +14,6 @@
     <ProjectReference Include="..\IdentityModelExtras\P7Corp.IdentityModelExtras.csproj" />
     <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\P7Corp.IdentityServer4.RequestTracker.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\P7Corp.IdentityServer4Extras.csproj" />
-    <ProjectReference Include="..\ProfileServiceManager\P7Corp.ProfileServiceManager.csproj" />
   </ItemGroup>
 
 </Project>
