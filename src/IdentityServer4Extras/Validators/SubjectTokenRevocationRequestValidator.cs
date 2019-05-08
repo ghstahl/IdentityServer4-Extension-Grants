@@ -7,6 +7,7 @@ using IdentityServer4.Validation;
 using IdentityServer4Extras.Extensions;
 using IdentityServer4Extras.Validation;
 using Microsoft.Extensions.Logging;
+using P7Core.Extensions;
 
 namespace IdentityServer4Extras.Validators
 {

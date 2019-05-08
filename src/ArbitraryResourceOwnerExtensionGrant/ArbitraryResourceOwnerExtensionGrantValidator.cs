@@ -12,6 +12,7 @@ using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
+using P7Core.Extensions;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {

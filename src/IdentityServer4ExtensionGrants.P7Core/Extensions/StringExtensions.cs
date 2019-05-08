@@ -4,10 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace IdentityServer4Extras.Extensions
+namespace P7Core.Extensions
 {
     public static class StringExtensions
     {
+        [DebuggerStepThrough]
+        public static string EnsureTrailingSlash(this string url)
+        {
+            if (!url.EndsWith("/"))
+            {
+                return url + "/";
+            }
+
+            return url;
+        }
         public static Guid AsGuid(this string value)
         {
             return Guid.Parse(value);

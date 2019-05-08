@@ -15,6 +15,7 @@ using IdentityServer4Extras.Extensions;
 using IdentityServer4Extras.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using P7Core.Extensions;
 
 namespace ArbitraryIdentityExtensionGrant
 {

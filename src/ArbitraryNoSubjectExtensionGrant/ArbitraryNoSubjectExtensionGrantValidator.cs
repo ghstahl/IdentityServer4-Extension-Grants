@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using P7Core.Extensions;
 
 namespace ArbitraryNoSubjectExtensionGrant
 {

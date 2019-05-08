@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FakeItEasy;
 using Microsoft.AspNetCore.DataProtection;
+using P7Core.Extensions;
 using Shouldly;
 using Xunit;
 using Xunit.Sdk;
@@ -12,7 +13,7 @@ namespace XUnitTestProject_P7CorpP7Core
 
     public class UnitTest_Utils
     {
-
+        
         void ArgumentFunc(object someObject)
         {
             P7Core.Utils.Guard.ArgumentNotNull(nameof(someObject), someObject);
@@ -27,6 +28,16 @@ namespace XUnitTestProject_P7CorpP7Core
         {
             P7Core.Utils.Guard.ArgumentNotNullOrEmpty(nameof(value), value);
 
+        }
+
+        [Fact]
+        public void Test_StringExtensions()
+        {
+            "dog".IsPresent().ShouldBeTrue();
+
+            string goodUrl = "https://a.b.com/";
+            var fixedUrl = goodUrl.EnsureTrailingSlash();
+            fixedUrl.ShouldBeSameAs(goodUrl);
         }
         [Fact]
         public async Task Test_Utils_ArgumentNotNull()

@@ -10,6 +10,7 @@ using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using P7Core.Extensions;
 using P7Core.ObjectCaches;
 
 namespace IdentityServerRequestTracker.Middleware

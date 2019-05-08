@@ -13,6 +13,7 @@ using IdentityServer4.ResponseHandling;
 using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using P7Core.Extensions;
 
 namespace IdentityServer4Extras.Endpoints
 {

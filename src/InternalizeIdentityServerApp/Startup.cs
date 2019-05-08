@@ -145,6 +145,8 @@ namespace InternalizeIdentityServerApp
             app.UseAuthentication();
 
             app.UseMvc();
+
+            app.ValidateIdentityServer();
         }
 
         public void AddIdentityResources(IServiceCollection services, IIdentityServerBuilder builder)
