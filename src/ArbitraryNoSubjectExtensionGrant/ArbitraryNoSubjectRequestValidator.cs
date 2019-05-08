@@ -15,14 +15,6 @@ namespace ArbitraryNoSubjectExtensionGrant
     {
         private readonly ILogger<ArbitraryNoSubjectRequestValidator> _logger;
 
-        private static List<string> _requiredArbitraryArguments;
-
-        private static List<string> RequiredArbitraryArguments => _requiredArbitraryArguments ??
-                                                                  (_requiredArbitraryArguments =
-                                                                      new List<string>
-                                                                      {
-                                                                          "arbitrary_claims"
-                                                                      });
 
         private static List<string> _notAllowedArbitraryClaims;
 
@@ -96,13 +88,6 @@ namespace ArbitraryNoSubjectExtensionGrant
                 }
             }
 
-            var result = RequiredArbitraryArguments.Except(rr.Keys);
-            if (result.Any())
-            {
-                error = true;
-                los.AddRange(result.Select(item => $"{item} is missing!"));
-
-            }
 
             try
             {

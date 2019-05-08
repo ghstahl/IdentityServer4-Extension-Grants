@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -27,26 +28,20 @@ namespace ArbitraryNoSubjectExtensionGrant
         private readonly IdentityServerOptions _options;
         private ValidatedTokenRequest _validatedRequest;
         private ArbitraryNoSubjectRequestValidator _arbitraryNoSubjectRequestValidator;
-        private PrincipalAugmenter _principalAugmenter;
-        private IServiceProvider _serviceProvider;
         private IClientSecretValidator _clientValidator;
         private IHttpContextAccessor _httpContextAccessor;
 
         public ArbitraryNoSubjectExtensionGrantValidator(
-            IServiceProvider serviceProvider,
             IdentityServerOptions options,
             IClientSecretValidator clientValidator,
             ILogger<ArbitraryNoSubjectExtensionGrantValidator> logger,
             ArbitraryNoSubjectRequestValidator arbitraryNoSubjectRequestValidator,
-            PrincipalAugmenter principalAugmenter,
             IHttpContextAccessor httpContextAccessor)
         {
-            _serviceProvider = serviceProvider;
             _logger = logger;
             _clientValidator = clientValidator;
             _options = options;
             _arbitraryNoSubjectRequestValidator = arbitraryNoSubjectRequestValidator;
-            _principalAugmenter = principalAugmenter;
             _httpContextAccessor = httpContextAccessor;
         }
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
@@ -83,22 +78,11 @@ namespace ArbitraryNoSubjectExtensionGrant
             // check grant type
             /////////////////////////////////////////////
             var grantType = _validatedRequest.Raw.Get(OidcConstants.TokenRequest.GrantType);
-            if (grantType.IsMissing())
-            {
-                LogError("Grant type is missing");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
-            if (grantType.Length > _options.InputLengthRestrictions.GrantType)
-            {
-                LogError("Grant type is too long");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
-
+            
             _validatedRequest.GrantType = grantType;
             context.Result = new GrantValidationResult();
         }
+        [ExcludeFromCodeCoverage]
         private void LogError(string message = null, params object[] values)
         {
             if (message.IsPresent())
