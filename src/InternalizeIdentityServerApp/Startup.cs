@@ -10,6 +10,8 @@ using IdentityServer4ExtensionGrants.Rollup.Extensions;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker.Extensions;
+using IdentityServerRequestTracker.Services;
+using InternalizeIdentityServerApp.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -47,7 +49,7 @@ namespace InternalizeIdentityServerApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-
+            services.AddTransient<IIdentityServerRequestTrackerEvaluator, MyIdentityServerRequestTrackerEvaluator>();
             services.AddOptions();
             services.AddCors(options =>
             {
@@ -108,6 +110,7 @@ namespace InternalizeIdentityServerApp
                 c.IncludeXmlComments(xmlPath);
             });
             return services.BuildServiceProvider();
+
 
         }
 

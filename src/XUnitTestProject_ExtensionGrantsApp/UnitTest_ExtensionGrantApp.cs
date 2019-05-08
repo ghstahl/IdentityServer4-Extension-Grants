@@ -31,6 +31,16 @@ namespace XUnitTestProject_ExtensionGrantsApp
             messageHandler.ShouldNotBeNull();
 
         }
+        [Fact]
+        public async Task Test_index_success()
+        {
+            var client = _fixture.Client;
+            var req = new HttpRequestMessage(HttpMethod.Get, "")
+            {
+                // Content = new FormUrlEncodedContent(dict)
+            };
+            var response = await client.SendAsync(req);
 
+        }
     }
 }
