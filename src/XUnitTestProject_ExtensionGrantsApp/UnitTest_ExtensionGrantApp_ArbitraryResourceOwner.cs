@@ -49,6 +49,111 @@ namespace XUnitTestProject_ExtensionGrantsApp
             result.RefreshToken.ShouldNotBeNullOrEmpty();
             result.ExpiresIn.ShouldNotBeNull();
         }
+
+
+
+        [Fact]
+        public async Task Mint_arbitrary_resource_owner_notallowed_claims()
+        {
+
+            var client = new TokenClient(
+                _fixture.TestServer.BaseAddress + "connect/token",
+                ClientId,
+                _fixture.MessageHandler);
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
+                    "Ratt"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'client_namespace': ['no-allowed']}"
+                },
+
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "2592000"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.Error.ShouldNotBeNullOrEmpty();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
+        }
+
+        [Fact]
+        public async Task Mint_arbitrary_resource_owner_missing_mallformed_claims()
+        {
+
+            var client = new TokenClient(
+                _fixture.TestServer.BaseAddress + "connect/token",
+                ClientId,
+                _fixture.MessageHandler);
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
+                    "Ratt"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'client_namespace': {'no-allowed'}}"
+                },
+
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "2592000"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.Error.ShouldNotBeNullOrEmpty();
+        }
+        [Fact]
+        public async Task Mint_arbitrary_resource_owner_missing_mallformed_custom_payload()
+        {
+
+            var client = new TokenClient(
+                _fixture.TestServer.BaseAddress + "connect/token",
+                ClientId,
+                _fixture.MessageHandler);
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
+                    "Ratt"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'hello': ['allowed']}"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.CustomPayload,
+                    "{'I_custom': {'dog':{'allowed']}}"
+                },
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "2592000"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.Error.ShouldNotBeNullOrEmpty();
+        }
+
         [Fact]
         public async Task Mint_arbitrary_resource_owner_Lifetime_outofbounds()
         {
@@ -167,8 +272,20 @@ namespace XUnitTestProject_ExtensionGrantsApp
                     "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
                 },
                 {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAmrs,
+                    "['a','b']"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAudiences,
+                    "['aud1','aud2']"
+                },
+                {
                     ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
                     "Ratt"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.CustomPayload,
+                    "{'I_custom': {'dog':['allowed']}}"
                 },
                 {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
             };

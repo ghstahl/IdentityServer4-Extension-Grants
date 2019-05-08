@@ -1,26 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
-using IdentityModelExtras;
-using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
-using IdentityServer4.ResponseHandling;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
-using IdentityServerRequestTracker.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Http;
 
 namespace ArbitraryResourceOwnerExtensionGrant
@@ -28,49 +18,26 @@ namespace ArbitraryResourceOwnerExtensionGrant
     public class ArbitraryResourceOwnerExtensionGrantValidator : IExtensionGrantValidator
     {
         private readonly ILogger<ArbitraryResourceOwnerExtensionGrantValidator> _logger;
-        private readonly IEventService _events;
-        private readonly IResourceStore _resourceStore;
-        private readonly ITokenResponseGenerator _tokenResponseGenerator;
         private readonly IdentityServerOptions _options;
         private ValidatedTokenRequest _validatedRequest;
-        private ISystemClock _clock;
-        private IMemoryCache _cache;
         private ArbitraryResourceOwnerRequestValidator _arbitraryResourceOwnerRequestValidator;
         private PrincipalAugmenter _principalAugmenter;
 
-        public IdentityServerRequestRecord IdentityServerRequestRecord { get; }
-
-        private ITokenValidator _tokenValidator;
-        private IServiceProvider _serviceProvider;
         private IClientSecretValidator _clientValidator;
         private IHttpContextAccessor _httpContextAccessor;
 
 
         public ArbitraryResourceOwnerExtensionGrantValidator(
-            ITokenValidator tokenValidator,
             IdentityServerOptions options,
-            IServiceProvider serviceProvider,
-            IResourceStore resourceStore,
             IClientSecretValidator clientValidator,
-            IEventService events,
-            ISystemClock clock,
-            IMemoryCache cache,
-            ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryResourceOwnerExtensionGrantValidator> logger,
             ArbitraryResourceOwnerRequestValidator arbitraryResourceOwnerRequestValidator,
             PrincipalAugmenter principalAugmenter,
             IHttpContextAccessor httpContextAccessor)
         {
-            _tokenValidator = tokenValidator;
             _logger = logger;
-            _clock = clock;
-            _cache = cache;
-            _events = events;
             _options = options;
-            _serviceProvider = serviceProvider;
-            _resourceStore = resourceStore;
             _clientValidator = clientValidator;
-            _tokenResponseGenerator = tokenResponseGenerator;
             _arbitraryResourceOwnerRequestValidator = arbitraryResourceOwnerRequestValidator;
             _principalAugmenter = principalAugmenter;
             _httpContextAccessor = httpContextAccessor;
@@ -109,22 +76,10 @@ namespace ArbitraryResourceOwnerExtensionGrant
             }
 
             /////////////////////////////////////////////
-            // check grant type
+            // get the grant type
+            // NOTE: The identityserver4 pipeline before us validated to obvious stuff
             /////////////////////////////////////////////
             var grantType = _validatedRequest.Raw.Get(OidcConstants.TokenRequest.GrantType);
-            if (grantType.IsMissing())
-            {
-                LogError("Grant type is missing");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
-
-            if (grantType.Length > _options.InputLengthRestrictions.GrantType)
-            {
-                LogError("Grant type is too long");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
 
             _validatedRequest.GrantType = grantType;
 
@@ -172,6 +127,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner);
         }
 
+        [ExcludeFromCodeCoverage]
         private void LogError(string message = null, params object[] values)
         {
             if (message.IsPresent())

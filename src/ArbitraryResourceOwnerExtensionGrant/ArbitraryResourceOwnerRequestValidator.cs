@@ -40,16 +40,9 @@ namespace ArbitraryResourceOwnerExtensionGrant
 
     public class ArbitraryResourceOwnerRequestValidator
     {
- 
+
         private readonly ILogger<ArbitraryResourceOwnerRequestValidator> _logger;
 
-        private static List<string> _requiredArbitraryArguments;
-        private static List<string> RequiredArbitraryArguments => _requiredArbitraryArguments ??
-                                                                  (_requiredArbitraryArguments =
-                                                                      new List<string>
-                                                                      {
-                                                                         
-                                                                      });
         private static List<string> _notAllowedArbitraryClaims;
         private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??
                                                                  (_notAllowedArbitraryClaims =
@@ -102,20 +95,13 @@ namespace ArbitraryResourceOwnerExtensionGrant
             var los = new List<string>();
 
             var oneMustExistResult = (from item in OneMustExitsArguments
-                where rr.Keys.Contains(item)
-                select item).ToList();
+                                      where rr.Keys.Contains(item)
+                                      select item).ToList();
 
             if (!oneMustExistResult.Any())
             {
                 error = true;
                 los.AddRange(OneMustExitsArguments.Select(item => $"[one or the other] {item} is missing!"));
-            }
-            var result = RequiredArbitraryArguments.Except(rr.Keys);
-            if (result.Any())
-            {
-                error = true;
-                los.AddRange(result.Select(item => $"{item} is missing!"));
-
             }
 
             // make sure nothing is malformed
@@ -132,10 +118,10 @@ namespace ArbitraryResourceOwnerExtensionGrant
                     var values =
                         JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(arbitraryClaims);
                     var invalidClaims = (from o in values
-                        join p in NotAllowedArbitraryClaims on o.Key equals p into t
-                        from od in t.DefaultIfEmpty()
-                        where od != null
-                        select od).ToList();
+                                         join p in NotAllowedArbitraryClaims on o.Key equals p into t
+                                         from od in t.DefaultIfEmpty()
+                                         where od != null
+                                         select od).ToList();
                     if (invalidClaims.Any())
                     {
                         // not allowed.

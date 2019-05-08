@@ -9,7 +9,6 @@ namespace ArbitraryResourceOwnerExtensionGrant.Extensions
         public static void AddArbitraryResourceOwnerExtentionGrantTypes(this IServiceCollection services)
         {
             services.AddTransient<ArbitraryResourceOwnerRequestValidator>();
-            services.AddSingleton<OIDCDiscoverCacheContainer>();
             services.AddTransient<ITokenServiceHookPlugin, TokenServiceHookPlugin>();
         }
     }
