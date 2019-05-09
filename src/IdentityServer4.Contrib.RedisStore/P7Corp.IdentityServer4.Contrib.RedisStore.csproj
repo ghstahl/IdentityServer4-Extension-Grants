@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>IdentityServer4.Contrib.RedisStore</RootNamespace>
+    <DebugType>None</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
