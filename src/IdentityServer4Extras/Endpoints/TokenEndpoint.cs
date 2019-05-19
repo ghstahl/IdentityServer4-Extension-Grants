@@ -35,7 +35,7 @@ namespace IdentityServer4Extras.Endpoints
         private readonly IEventService _events;
         private readonly ILogger _logger;
         private readonly IClientStore _clients;
-        
+
         private IHttpContextAccessor _httpContextAccessor;
         private ITokenRevocationRequestValidator _revocationRequestValidator;
         private ITokenRevocationResponseGenerator _revocationResponseGenerator;
@@ -103,7 +103,7 @@ namespace IdentityServer4Extras.Endpoints
                 EndpointKey = "extra",
                 Client = client
             };
-          
+
             var clientSecretValidationResult = new ClientSecretValidationResult
             {
                 IsError = false,
@@ -272,7 +272,14 @@ namespace IdentityServer4Extras.Endpoints
                 scope.TrimEnd();
                 fields.Add("scope", scope);
             }
-
+            if (!string.IsNullOrWhiteSpace(request.AccessTokenLifetime))
+            {
+                fields.Add("access_token_lifetime", request.AccessTokenLifetime);
+            }
+            if (!string.IsNullOrWhiteSpace(request.IdentityTokenLifetime))
+            {
+                fields.Add("id_token_lifetime", request.IdentityTokenLifetime);
+            }
             if (request.ArbitraryClaims != null)
             {
                 fields.Add("arbitrary_claims", JsonConvert.SerializeObject(request.ArbitraryClaims));
@@ -316,20 +323,20 @@ namespace IdentityServer4Extras.Endpoints
                 {"revoke_all_subjects", request.RevokeAllSubjects}
             };
             var formCollection = new FormCollection(fields);
-            var result =  await ProcessRawRevocationAsync(formCollection);
+            var result = await ProcessRawRevocationAsync(formCollection);
             return result;
-           
+
         }
         public async Task<RevocationRawResult> ProcessRawRevocationAsync(IFormCollection formCollection)
         {
- 
+
             _logger.LogTrace("Processing token request.");
 
             var rawResult = new RevocationRawResult()
             {
                 StatusCodeResult = new StatusCodeResult(HttpStatusCode.BadRequest)
             };
-          
+
             // validate HTTP
             if (formCollection.IsNullOrEmpty())
             {

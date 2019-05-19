@@ -32,6 +32,7 @@ namespace IdentityServer4Extras.Endpoints
         public List<string> Scopes { get; set; }
         public string Subject { get; set; }
         public string AccessTokenLifetime { get; set; }
+        public string IdentityTokenLifetime { get; set; }
         public Dictionary<string, List<string>> ArbitraryClaims { get; set; }
         public List<string> ArbitraryAmrs { get; set; }
         public List<string> ArbitraryAudiences { get; set; }
