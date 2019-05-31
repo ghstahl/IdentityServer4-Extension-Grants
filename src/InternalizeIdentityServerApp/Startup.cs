@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using ArbitraryIdentityExtensionGrant;
 using IdentityServer4.Configuration;
 using IdentityServer4ExtensionGrants.Rollup.Extensions;
-using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker.Extensions;
 using IdentityServerRequestTracker.Services;
@@ -16,18 +13,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using P7Core;
-using P7Core.IRules;
-using P7Core.ObjectContainers.Extensions;
 using P7IdentityServer4.Extensions;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -127,7 +119,7 @@ namespace InternalizeIdentityServerApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-            app.UseRewriter(new RewriteOptions().Add(new RewriteLowerCaseRule()));
+           
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

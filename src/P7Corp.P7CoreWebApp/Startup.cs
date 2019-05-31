@@ -41,7 +41,7 @@ namespace P7Corp.P7CoreWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddP7Core();
+           
             services.TryAddTransient<IDefaultHttpClientFactory, DefaultHttpClientFactory>();
 
             services.AddLazyTransient<ISomeLazyTransient, SomeTransient>();
@@ -52,7 +52,6 @@ namespace P7Corp.P7CoreWebApp
             services.AddSingleton<ISomeSingleton, SomeSingleton>();
             services.AddScoped<ISomeScoped, SomeScoped>();
 
-            services.RegisterP7CoreConfigurationServices(Configuration);
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -67,7 +66,7 @@ namespace P7Corp.P7CoreWebApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseLowercaseRewriter();
+          
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
