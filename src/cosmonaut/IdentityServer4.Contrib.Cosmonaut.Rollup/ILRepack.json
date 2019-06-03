@@ -1,0 +1,24 @@
+{
+  "outputAssembly": "IdentityServer4.Contrib.Cosmonaut.Rollup",
+  "assembliesToMerge": [
+    {
+      "assembly": "IdentityServer4.Contrib.Cosmonaut.Rollup",
+      "symbols": null
+    },
+    {
+      "assembly": "Cosmonaut",
+      "symbols": null
+    },
+    {
+      "assembly": "Cosmonaut.Extensions.Microsoft.DependencyInjection",
+      "symbols": null
+    },
+    {
+      "assembly": "IdentityServer4.Contrib.Cosmonaut",
+      "symbols": null
+    }
+
+
+  ]
+}
+

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PackageLicenseUrl>https://github.com/ghstahl/Cosmonaut-IdentityServer4-Stores/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ghstahl/Cosmonaut-IdentityServer4-Stores/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ghstahl/Cosmonaut-IdentityServer4-Stores/</RepositoryUrl>
+    <RootNamespace>IdentityServer4ExtensionGrants.Rollup</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cosmonaut.Extensions.Microsoft.DependencyInjection\Cosmonaut.Extensions.Microsoft.DependencyInjection.csproj" />
+    <ProjectReference Include="..\Cosmonaut\Cosmonaut.csproj" />
+    <ProjectReference Include="..\IdentityServer4.Contrib.Cosmonaut\IdentityServer4.Contrib.Cosmonaut.csproj" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rd /s /q &quot;$(TargetDir)&quot;" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo -rootDir $(SolutionDir)..\ &#xD;&#xA;echo -targetDir $(TargetDir) &#xD;&#xA;echo -projectDir $(ProjectDir)&#xD;&#xA;&#xD;&#xA;echo powershell -NoProfile -ExecutionPolicy RemoteSigned -file $(SolutionDir)..\tools\repack.ps1                -rootDir $(SolutionDir).\  -targetDir $(TargetDir) -projectDir $(ProjectDir)&#xD;&#xA;&#xD;&#xA;powershell -NoProfile -ExecutionPolicy RemoteSigned -file $(SolutionDir)..\tools\repack.ps1                -rootDir $(SolutionDir)..\  -targetDir $(TargetDir) -projectDir $(ProjectDir)&#xD;&#xA;&#xD;&#xA;" />
+  </Target>
+
+</Project>
