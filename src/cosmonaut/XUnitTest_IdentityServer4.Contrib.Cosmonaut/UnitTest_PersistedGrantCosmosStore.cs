@@ -19,7 +19,8 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
     public class UnitTest_PersistedGrantCosmosStore
     {
         string NewGuidS => Guid.NewGuid().ToString();
-      
+
+        private DatabaseInitializer _databaseInitializer;
         private ICosmonautClient _cosmonautClient;
 
         private ICosmosStore<PersistedGrantEntity> _persistedGrantCosmosStore;
@@ -28,20 +29,39 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         public static readonly string PersistantGrantCollectionName = $"COL{nameof(UnitTest_PersistedGrantCosmosStore)}_PersistedGrant";
         private IPersistedGrantStore _persistedGrantStore;
         public UnitTest_PersistedGrantCosmosStore(
+            DatabaseInitializer databaseInitializer,
             ICosmonautClient cosmonautClient,
             ICosmosStore<PersistedGrantEntity> persistedGrantCosmosStore,
             IPersistedGrantStore persistedGrantStore)
         {
+            _databaseInitializer = databaseInitializer;
             _cosmonautClient = cosmonautClient;
             _persistedGrantCosmosStore = persistedGrantCosmosStore;
             _persistedGrantStore = persistedGrantStore;
+        }
+
+        [Fact, TestPriority(-1000)]
+
+        public async Task Ensure_Database_ScalingSettings()
+        {
+
+
+            // Act
+            var result = new Action(() =>
+            {
+                _databaseInitializer.action();
+            });
+
+            //Assert
+            result.Should().NotThrow();
+
         }
 
         [Fact, TestPriority(0)]
         public async Task Persist_Grant_That_Will_Expire()
         {
             _currentId = NewGuidS;
-            var ttl = 3; // 2 seconds
+            var ttl = 4; // 2 seconds
             var entity = new PersistedGrantEntity
             {
                 Key = _currentId,
@@ -67,7 +87,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 
             entity.Should().NotBeNull();
             entity.Key.Should().Be(_currentId);
-            Thread.Sleep(5000);
+            Thread.Sleep(6000);
 
             entity = await _persistedGrantCosmosStore.FindAsync(_currentId, _currentId);
             entity.Should().BeNull();

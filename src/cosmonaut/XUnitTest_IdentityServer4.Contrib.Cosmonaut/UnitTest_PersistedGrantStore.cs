@@ -20,10 +20,11 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
     public class UnitTest_PersistedGrantStore
     {
         string NewGuidS => Guid.NewGuid().ToString();
-      
+
+        private DatabaseInitializer _databaseInitializer;
         private ICosmonautClient _cosmonautClient;
 
-  
+
         private static string _currentId;
         public static readonly string DatabaseId = $"DB{nameof(UnitTest_PersistedGrantStore)}";
         public static readonly string PersistantGrantCollectionName = $"COL{nameof(UnitTest_PersistedGrantStore)}_PersistedGrant";
@@ -35,10 +36,12 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         private static PersistedGrantEntity _currentRemoveAllEntityType;
 
         public UnitTest_PersistedGrantStore(
+            DatabaseInitializer databaseInitializer,
             ICosmonautClient cosmonautClient,
             ICosmosStore<PersistedGrantEntity> persistedGrantCosmosStore,
             IPersistedGrantStore persistedGrantStore)
         {
+            _databaseInitializer = databaseInitializer;
             _cosmonautClient = cosmonautClient;
             _persistedGrantCosmosStore = persistedGrantCosmosStore;
             _persistedGrantStore = persistedGrantStore;
@@ -47,23 +50,16 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 
         public async Task Ensure_Database_ScalingSettings()
         {
-            var collection = await _cosmonautClient.GetCollectionAsync(DatabaseId, PersistantGrantCollectionName);
-            collection.DefaultTimeToLive = 7700000;
+
 
             // Act
             var result = new Action(() =>
             {
-                var response = _cosmonautClient.UpdateCollectionAsync(DatabaseId, PersistantGrantCollectionName, collection)
-                    .GetAwaiter()
-                    .GetResult();
-                response.StatusCode.Should().Be(HttpStatusCode.OK);
+                _databaseInitializer.action();
             });
 
             //Assert
             result.Should().NotThrow();
-
-            collection = await _cosmonautClient.GetCollectionAsync(DatabaseId, PersistantGrantCollectionName);
-            collection.DefaultTimeToLive.Should().Be(7700000);
 
         }
         [Fact]
@@ -406,16 +402,16 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                     });
                 }
             }
-          
+
             var id = NewGuidS;
-            
+
 
             var addedResults = await _persistedGrantCosmosStore.AddRangeAsync(_currentManyEntities);
 
             addedResults.IsSuccess.Should().BeTrue();
 
             addedResults.SuccessfulEntities.Count.Should().Be(20);
-         }
+        }
         [Fact, TestPriority(0)]
         public async Task get_subjects_Success()
         {

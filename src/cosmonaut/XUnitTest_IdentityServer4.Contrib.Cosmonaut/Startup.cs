@@ -21,8 +21,15 @@ using Xunit.DependencyInjection.Logging;
 
 namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 {
+    public class DatabaseInitializer
+    {
+        private bool Initialized { get; set; }
+        public Action action { get; set; }
+
+    }
     public class Startup : DependencyInjectionTestFramework
     {
+        public static bool Initialized = false;
         private readonly ConnectionPolicy _connectionPolicy = new ConnectionPolicy
         {
             ConnectionProtocol = Protocol.Tcp,
@@ -39,6 +46,32 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         {
             var builder = services.AddIdentityServer();
             services.AddSingleton<IAsyncExceptionFilter, DemystifyExceptionFilter>();
+            services.AddSingleton<DatabaseInitializer>(sp =>
+            {
+                return new DatabaseInitializer()
+                {
+                    action = () =>
+                    {
+                        lock (this)
+                        {
+                            if (!Initialized)
+                            {
+                                var client = sp.GetRequiredService<ICosmonautClient>();
+                                var collection = client.GetCollectionAsync(UnitTest_PersistedGrantStore.DatabaseId,
+                                    UnitTest_PersistedGrantStore.PersistantGrantCollectionName).GetAwaiter().GetResult();
+                                collection.DefaultTimeToLive = 7700000;
+                                var response = client.UpdateCollectionAsync(UnitTest_PersistedGrantStore.DatabaseId,
+                                    UnitTest_PersistedGrantStore.PersistantGrantCollectionName, collection)
+                                   .GetAwaiter()
+                                   .GetResult();
+                                Initialized = true;
+                            }
+
+                        }
+
+                    }
+                };
+            });
             services.AddTransient<ICosmonautClient>(sp =>
             {
                 var client = new CosmonautClient(_emulatorUri, _emulatorKey, _connectionPolicy);
@@ -47,8 +80,8 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 
             //   _cosmonautClient = new CosmonautClient(_emulatorUri, _emulatorKey, _connectionPolicy);
             var cosmosStoreSettings = new CosmosStoreSettings(
-                UnitTest_PersistedGrantStore.DatabaseId, 
-                _emulatorUri, 
+                UnitTest_PersistedGrantStore.DatabaseId,
+                _emulatorUri,
                 _emulatorKey,
                 s =>
                 {
