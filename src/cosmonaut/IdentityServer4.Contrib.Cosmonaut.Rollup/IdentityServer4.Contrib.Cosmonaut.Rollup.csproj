@@ -12,16 +12,21 @@
     <RootNamespace>IdentityServer4ExtensionGrants.Rollup</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.1.1" />
+    <PackageReference Include="Humanizer" Version="2.6.2" />
+    <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="2.4.0" />
+  </ItemGroup>
+  <ItemGroup>
 
     <ProjectReference Include="..\Cosmonaut.Extensions.Microsoft.DependencyInjection\Cosmonaut.Extensions.Microsoft.DependencyInjection.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
 
-    <ProjectReference Include="..\Cosmonaut\Cosmonaut.csproj" >
+    <ProjectReference Include="..\Cosmonaut\Cosmonaut.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
 
-    <ProjectReference Include="..\IdentityServer4.Contrib.Cosmonaut\IdentityServer4.Contrib.Cosmonaut.csproj" >
+    <ProjectReference Include="..\IdentityServer4.Contrib.Cosmonaut\IdentityServer4.Contrib.Cosmonaut.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>
 
