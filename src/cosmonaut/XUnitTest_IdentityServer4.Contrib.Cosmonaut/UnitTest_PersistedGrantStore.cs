@@ -19,7 +19,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
     [TestCaseOrderer("XUnitHelpers.TestCaseOrdering.PriorityOrderer", "XUnitHelpers")]
     public class UnitTest_PersistedGrantStore
     {
-        string NewGuidS => Guid.NewGuid().ToString();
+        string NewGuidS => Guid.NewGuid().ToString() + "/a";
 
         private DatabaseInitializer _databaseInitializer;
         private ICosmonautClient _cosmonautClient;

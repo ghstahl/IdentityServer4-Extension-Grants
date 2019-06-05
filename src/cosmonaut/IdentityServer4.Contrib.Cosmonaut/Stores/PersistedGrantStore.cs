@@ -26,10 +26,10 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
 
         public async Task StoreAsync(PersistedGrant grant)
         {
-            Guard.ForNull(grant,nameof(grant));
+            Guard.ForNull(grant, nameof(grant));
             Guard.ForNull(grant.CreationTime, nameof(grant.CreationTime));
             Guard.ForNull(grant.Expiration, nameof(grant.Expiration));
-            Guard.ForNullOrWhitespace(grant.ClientId,nameof(grant.ClientId));
+            Guard.ForNullOrWhitespace(grant.ClientId, nameof(grant.ClientId));
             Guard.ForNullOrWhitespace(grant.SubjectId, nameof(grant.SubjectId));
             Guard.ForNullOrWhitespace(grant.Data, nameof(grant.Data));
             Guard.ForNullOrWhitespace(grant.Key, nameof(grant.Key));
@@ -57,12 +57,18 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
         public async Task<PersistedGrant> GetAsync(string key)
         {
             Guard.ForNull(key, nameof(key));
-            var entity = await _persistedGrantCosmosStore.FindAsync(key, key);
+            var sql = $"SELECT* FROM c where c.key = \"{key}\"";
+            var entity = (await _persistedGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(key)
+            }));
             if (entity == null)
             {
                 return null;
             }
-            return entity.ToModel();
+            var model = entity.ToModel();
+
+            return model;
         }
         public async Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
@@ -77,8 +83,18 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
         public async Task RemoveAsync(string key)
         {
             Guard.ForNull(key, nameof(key));
-            await _persistedGrantCosmosStore.RemoveByIdAsync(key, key);
-            
+            var sql = $"SELECT* FROM c where c.key = \"{key}\"";
+            var entity = (await _persistedGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(key)
+            }));
+            if (entity == null)
+            {
+                return;
+            }
+
+            await _persistedGrantCosmosStore.RemoveByIdAsync(entity.Id, entity.Key);
+
         }
         public async Task RemoveAllAsync(string subjectId, string clientId)
         {
@@ -90,7 +106,7 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
             var persistedGrants = (await _persistedGrantCosmosStore.QueryMultipleAsync(sql)).ToList();
             foreach (var entity in persistedGrants)
             {
-                await RemoveAsync(entity.Key);
+                await _persistedGrantCosmosStore.RemoveByIdAsync(entity.Id, entity.Key);
             }
 
         }
@@ -104,7 +120,7 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
             var persistedGrants = (await _persistedGrantCosmosStore.QueryMultipleAsync(sql)).ToList();
             foreach (var entity in persistedGrants)
             {
-                await RemoveAsync(entity.Key);
+                await _persistedGrantCosmosStore.RemoveByIdAsync(entity.Id, entity.Key);
             }
         }
     }

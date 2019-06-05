@@ -8,13 +8,17 @@ namespace IdentityServer4.Contrib.Cosmonaut.Entities
 {
     public class PersistedGrantEntity
     {
+        [JsonProperty("id")]
+
+        public string Id { get; set; }
+
         [JsonProperty("ttl")]
         public int TTL { get; set; }
 
         [JsonProperty("_etag")]
         public string Etag { get; set; }
 
-        [JsonProperty("id")]
+        [JsonProperty("key")]
         [CosmosPartitionKey]
         public string Key { get; set; }
 

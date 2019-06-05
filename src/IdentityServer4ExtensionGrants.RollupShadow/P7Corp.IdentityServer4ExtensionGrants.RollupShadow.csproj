@@ -14,7 +14,6 @@
     <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\P7Corp.ArbitraryNoSubjectExtensionGrant.csproj" />
     <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\P7Corp.ArbitraryResourceOwnerExtensionGrant.csproj" />
     <ProjectReference Include="..\IdentityModelExtras\P7Corp.IdentityModelExtras.csproj" />
-    <ProjectReference Include="..\IdentityServer4.Contrib.CosmosDB\P7Corp.IdentityServer4.Contrib.CosmosDB.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.RedisStore\P7Corp.IdentityServer4.Contrib.RedisStore.csproj" />
     <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\P7Corp.IdentityServer4.RequestTracker.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\P7Corp.IdentityServer4Extras.csproj" />

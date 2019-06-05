@@ -52,14 +52,10 @@
     {
       "assembly": "P7Corp.P7Core",
       "symbols": null
-    },
-
-    {
-      "assembly": "P7Corp.IdentityServer4.Contrib.CosmosDB",
-      "symbols": null
     }
+
+
 
 
   ]
 }
-

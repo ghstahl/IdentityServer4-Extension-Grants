@@ -7,7 +7,6 @@ using FakeItEasy;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer4;
-using IdentityServer4.Contrib.CosmosDB.Entities;
 using Microsoft.Extensions.Logging;
 using Shouldly;
 using Xunit;
@@ -19,7 +18,7 @@ namespace XUnitTestProject_ExtensionGrantsApp
         public string ClientId => "arbitrary-resource-owner-client";
         public string ClientSecret => "secret";
 
-        
+
         [Fact]
         public void ArbitraryResourceOwnerExtensionGrantValidator_ValidateAsync_Exception()
         {

@@ -18,7 +18,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
     [TestCaseOrderer("XUnitHelpers.TestCaseOrdering.PriorityOrderer", "XUnitHelpers")]
     public class UnitTest_PersistedGrantCosmosStore
     {
-        string NewGuidS => Guid.NewGuid().ToString();
+        string NewGuidS => Guid.NewGuid().ToString() + "/a";
 
         private DatabaseInitializer _databaseInitializer;
         private ICosmonautClient _cosmonautClient;
@@ -83,13 +83,24 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         [Fact, TestPriority(1)]
         public async Task Persist_Grant_That_Will_Expire_Fetch_SUCCESS()
         {
-            var entity = await _persistedGrantCosmosStore.FindAsync(_currentId, _currentId);
+
+            var sql = $"SELECT* FROM c where c.key = \"{_currentId}\"";
+            var entity = (await _persistedGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(_currentId)
+            }));
+            entity.Should().NotBeNull();
+
+
+
+            entity = await _persistedGrantCosmosStore.FindAsync(entity.Id, _currentId);
 
             entity.Should().NotBeNull();
             entity.Key.Should().Be(_currentId);
             Thread.Sleep(6000);
 
-            entity = await _persistedGrantCosmosStore.FindAsync(_currentId, _currentId);
+
+            entity = await _persistedGrantCosmosStore.FindAsync(entity.Id, _currentId);
             entity.Should().BeNull();
         }
 
