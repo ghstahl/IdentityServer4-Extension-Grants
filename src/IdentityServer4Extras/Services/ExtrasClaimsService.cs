@@ -7,20 +7,16 @@ using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Validation;
-using IdentityServer4Extras.Stores;
 
 namespace IdentityServer4Extras.Services
 {
     public class ExtrasClaimsService : IClaimsService
     {
         private DefaultClaimsService _defaultClaimsService;
-        private IClientStoreExtra _clientStoreExtra;
 
         public ExtrasClaimsService(
-            IClientStoreExtra clientStoreExtra,
             DefaultClaimsService defaultClaimsService)
         {
-            _clientStoreExtra = clientStoreExtra;
             _defaultClaimsService = defaultClaimsService;
         }
         public async Task<IEnumerable<Claim>> GetIdentityTokenClaimsAsync(ClaimsPrincipal subject, Resources resources, bool includeAllIdentityClaims,
