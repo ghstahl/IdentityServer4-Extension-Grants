@@ -59,9 +59,11 @@ namespace IdentityServer4Extras.Extensions
 
         public static IIdentityServerBuilder AddInMemoryClientStoreExtra(this IIdentityServerBuilder builder)
         {
+
             builder.Services.RemoveAll<IClientStore>();
-            builder.Services.TryAddSingleton<IClientStoreExtra, InMemoryClientStoreExtra>();
-            builder.Services.TryAddSingleton<IClientStore>(x => x.GetService<IClientStoreExtra>());
+            builder.Services.TryAddTransient<InMemoryClientStoreExtra>();
+            builder.Services.TryAddTransient<IClientStoreExtra, InMemoryClientStoreExtra>();
+            builder.AddClientStoreCacheExtra<InMemoryClientStoreExtra>();
             return builder;
         }
 

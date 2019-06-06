@@ -119,7 +119,7 @@ namespace InternalizeIdentityServerApp
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
-           
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -186,6 +186,7 @@ namespace InternalizeIdentityServerApp
             }
             else
             {
+                builder.AddInMemoryCaching();
                 builder.AddInMemoryPersistedGrants();
                 services.AddDistributedMemoryCache();
             }

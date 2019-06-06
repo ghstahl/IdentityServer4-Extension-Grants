@@ -47,7 +47,9 @@ namespace IdentityServer4Extras.Stores
                 where client.ClientId == clientId
                 select client;
 
-            return Task.FromResult(query.SingleOrDefault());
+            var cc = query.SingleOrDefault() as ClientExtra;
+
+            return Task.FromResult(cc as Client);
         }
 
         public Task<List<string>> GetAllClientIdsAsync()
