@@ -21,13 +21,13 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
     {
         string NewGuidS => Guid.NewGuid().ToString() + "/a";
 
-        private DatabaseInitializer _databaseInitializer;
+        private DatabaseInitializer<UnitTest_PersistedGrantStore> _databaseInitializer;
         private ICosmonautClient _cosmonautClient;
 
 
         private static string _currentId;
         public static readonly string DatabaseId = $"DB{nameof(UnitTest_PersistedGrantStore)}";
-        public static readonly string PersistantGrantCollectionName = $"COL{nameof(UnitTest_PersistedGrantStore)}_PersistedGrant";
+        public static readonly string CollectionName = $"COL{nameof(UnitTest_PersistedGrantStore)}_PersistedGrant";
         private IPersistedGrantStore _persistedGrantStore;
         private static PersistedGrant _currentPersistedGrant;
         private ICosmosStore<PersistedGrantEntity> _persistedGrantCosmosStore;
@@ -36,7 +36,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         private static PersistedGrantEntity _currentRemoveAllEntityType;
 
         public UnitTest_PersistedGrantStore(
-            DatabaseInitializer databaseInitializer,
+            DatabaseInitializer<UnitTest_PersistedGrantStore> databaseInitializer,
             ICosmonautClient cosmonautClient,
             ICosmosStore<PersistedGrantEntity> persistedGrantCosmosStore,
             IPersistedGrantStore persistedGrantStore)

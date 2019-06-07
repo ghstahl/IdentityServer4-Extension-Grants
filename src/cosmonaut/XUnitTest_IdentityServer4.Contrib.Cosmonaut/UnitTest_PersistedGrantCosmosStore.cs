@@ -20,16 +20,17 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
     {
         string NewGuidS => Guid.NewGuid().ToString() + "/a";
 
-        private DatabaseInitializer _databaseInitializer;
+        private DatabaseInitializer<UnitTest_PersistedGrantStore> _databaseInitializer;
         private ICosmonautClient _cosmonautClient;
 
         private ICosmosStore<PersistedGrantEntity> _persistedGrantCosmosStore;
         private static string _currentId;
-        public static readonly string DatabaseId = $"DB{nameof(UnitTest_PersistedGrantCosmosStore)}";
-        public static readonly string PersistantGrantCollectionName = $"COL{nameof(UnitTest_PersistedGrantCosmosStore)}_PersistedGrant";
+
         private IPersistedGrantStore _persistedGrantStore;
+        private static PersistedGrantEntity _currentEntity;
+
         public UnitTest_PersistedGrantCosmosStore(
-            DatabaseInitializer databaseInitializer,
+            DatabaseInitializer<UnitTest_PersistedGrantStore> databaseInitializer,
             ICosmonautClient cosmonautClient,
             ICosmosStore<PersistedGrantEntity> persistedGrantCosmosStore,
             IPersistedGrantStore persistedGrantStore)
@@ -41,7 +42,6 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         }
 
         [Fact, TestPriority(-1000)]
-
         public async Task Ensure_Database_ScalingSettings()
         {
 
@@ -60,11 +60,11 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         [Fact, TestPriority(0)]
         public async Task Persist_Grant_That_Will_Expire()
         {
-            _currentId = NewGuidS;
-            var ttl = 4; // 2 seconds
-            var entity = new PersistedGrantEntity
+
+            var ttl = 5; // 2 seconds
+            _currentEntity = new PersistedGrantEntity
             {
-                Key = _currentId,
+                Key = NewGuidS,
                 ClientId = NewGuidS,
                 CreationTime = DateTime.UtcNow,
                 Data = NewGuidS,
@@ -74,7 +74,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
             };
 
 
-            var response = await _persistedGrantCosmosStore.AddAsync(entity);
+            var response = await _persistedGrantCosmosStore.AddAsync(_currentEntity);
 
             response.Should().NotBeNull();
             response.IsSuccess.Should().BeTrue();
@@ -84,25 +84,29 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         public async Task Persist_Grant_That_Will_Expire_Fetch_SUCCESS()
         {
 
-            var sql = $"SELECT* FROM c where c.key = \"{_currentId}\"";
+            var sql = $"SELECT* FROM c where c.key = \"{_currentEntity.Key}\"";
             var entity = (await _persistedGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
             {
-                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(_currentId)
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(_currentEntity.Key)
             }));
             entity.Should().NotBeNull();
+            _currentEntity.Key.Should().Be(entity.Key);
 
+            _currentEntity.Id = entity.Id;
 
-
-            entity = await _persistedGrantCosmosStore.FindAsync(entity.Id, _currentId);
+            entity = await _persistedGrantCosmosStore.FindAsync(entity.Id, _currentEntity.Key);
 
             entity.Should().NotBeNull();
-            entity.Key.Should().Be(_currentId);
+            entity.Key.Should().Be(_currentEntity.Key);
+
+        }
+        [Fact, TestPriority(2)]
+        public async Task Persist_Grant_That_Will_Expire_Fetch_is_null()
+        {
             Thread.Sleep(6000);
 
-
-            entity = await _persistedGrantCosmosStore.FindAsync(entity.Id, _currentId);
+            var entity = await _persistedGrantCosmosStore.FindAsync(_currentEntity.Id, _currentEntity.Key);
             entity.Should().BeNull();
         }
-
     }
 }

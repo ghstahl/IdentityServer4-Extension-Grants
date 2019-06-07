@@ -21,7 +21,8 @@ using Xunit.DependencyInjection.Logging;
 
 namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 {
-    public class DatabaseInitializer
+
+    public class DatabaseInitializer<T> where T : class
     {
         private bool Initialized { get; set; }
         public Action action { get; set; }
@@ -46,9 +47,9 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         {
             var builder = services.AddIdentityServer();
             services.AddSingleton<IAsyncExceptionFilter, DemystifyExceptionFilter>();
-            services.AddSingleton<DatabaseInitializer>(sp =>
+            services.AddSingleton<DatabaseInitializer<UnitTest_CacheItemCosmosStore>>(sp =>
             {
-                return new DatabaseInitializer()
+                return new DatabaseInitializer<UnitTest_CacheItemCosmosStore>()
                 {
                     action = () =>
                     {
@@ -57,13 +58,43 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                             if (!Initialized)
                             {
                                 var client = sp.GetRequiredService<ICosmonautClient>();
-                                var collection = client.GetCollectionAsync(UnitTest_PersistedGrantStore.DatabaseId,
-                                    UnitTest_PersistedGrantStore.PersistantGrantCollectionName).GetAwaiter().GetResult();
+
+                                var collection = client.GetCollectionAsync(UnitTest_CacheItemCosmosStore.DatabaseId,
+                                  UnitTest_CacheItemCosmosStore.CollectionName).GetAwaiter().GetResult();
                                 collection.DefaultTimeToLive = 7700000;
-                                var response = client.UpdateCollectionAsync(UnitTest_PersistedGrantStore.DatabaseId,
-                                    UnitTest_PersistedGrantStore.PersistantGrantCollectionName, collection)
+                                var response = client.UpdateCollectionAsync(UnitTest_CacheItemCosmosStore.DatabaseId,
+                                    UnitTest_CacheItemCosmosStore.CollectionName, collection)
                                    .GetAwaiter()
                                    .GetResult();
+
+                                Initialized = true;
+                            }
+
+                        }
+
+                    }
+                };
+            });
+            services.AddSingleton<DatabaseInitializer<UnitTest_PersistedGrantStore>>(sp =>
+            {
+                return new DatabaseInitializer<UnitTest_PersistedGrantStore>()
+                {
+                    action = () =>
+                    {
+                        lock (this)
+                        {
+                            if (!Initialized)
+                            {
+                                var client = sp.GetRequiredService<ICosmonautClient>();
+
+                                var collection = client.GetCollectionAsync(UnitTest_PersistedGrantStore.DatabaseId,
+                                  UnitTest_PersistedGrantStore.CollectionName).GetAwaiter().GetResult();
+                                collection.DefaultTimeToLive = 7700000;
+                                var response = client.UpdateCollectionAsync(UnitTest_PersistedGrantStore.DatabaseId,
+                                    UnitTest_PersistedGrantStore.CollectionName, collection)
+                                   .GetAwaiter()
+                                   .GetResult();
+
                                 Initialized = true;
                             }
 
@@ -90,7 +121,21 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                         new RangeIndex(DataType.Number, -1),
                         new RangeIndex(DataType.String, -1));
                 });
-            builder.AddOperationalStore(cosmosStoreSettings, UnitTest_PersistedGrantStore.PersistantGrantCollectionName);
+            var cosmosStoreSettingsCache = new CosmosStoreSettings(
+               UnitTest_CacheItemCosmosStore.DatabaseId,
+               _emulatorUri,
+               _emulatorKey,
+               s =>
+               {
+                   s.ConnectionPolicy = _connectionPolicy;
+                   s.IndexingPolicy = new IndexingPolicy(
+                       new RangeIndex(DataType.Number, -1),
+                       new RangeIndex(DataType.String, -1));
+               });
+
+            builder.AddOperationalStore(cosmosStoreSettings, UnitTest_PersistedGrantStore.CollectionName);
+            builder.AddCosmonautIdentityServerCacheStore(cosmosStoreSettingsCache, UnitTest_CacheItemCosmosStore.CollectionName);
+
         }
         protected override void Configure(IServiceProvider provider)
         {

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using Cosmonaut;
 using Cosmonaut.Extensions.Microsoft.DependencyInjection;
+using IdentityServer4.Contrib.Cosmonaut.Cache;
 using IdentityServer4.Contrib.Cosmonaut.Entities;
+using IdentityServer4.Contrib.Cosmonaut.Models;
 using IdentityServer4.Contrib.Cosmonaut.Stores;
+using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,10 +18,30 @@ namespace IdentityServer4.Contrib.Cosmonaut.Extensions
     /// </summary>
     public static class IdentityServerBuilderExtensions
     {
+        public static IIdentityServerBuilder AddCosmonautIdentityServerCacheStore(
+               this IIdentityServerBuilder builder,
+               CosmosStoreSettings settings,
+               string overriddenCollectionName = "")
+        {
+            builder.Services.AddIdentityServerCacheCosmonautStore(settings, overriddenCollectionName);
+            builder.Services.AddTransient(typeof(ICache<>), typeof(CosmonautCache<>));
+            return builder;
+        }
+
+        private static IServiceCollection AddIdentityServerCacheCosmonautStore(
+               this IServiceCollection services,
+               CosmosStoreSettings settings,
+               string overriddenCollectionName = "")
+        {
+            services.AddTransient<ICacheStore<CacheItem>, CacheStore>();
+
+            services.AddCosmosStore<CacheEntity>(settings, overriddenCollectionName);
+            return services;
+        }
         private static IServiceCollection AddPersistedGrantCosmonautStore(
             this IServiceCollection services,
             CosmosStoreSettings settings,
-            string overriddenCollectionName = "") 
+            string overriddenCollectionName = "")
         {
             services.AddCosmosStore<PersistedGrantEntity>(settings, overriddenCollectionName);
             return services;

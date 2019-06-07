@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using AutoMapper;
 using IdentityServer4.Contrib.Cosmonaut.Entities;
+using IdentityServer4.Contrib.Cosmonaut.Models;
 using IdentityServer4.Models;
 
 namespace IdentityServer4.Contrib.Cosmonaut.Mappers
@@ -14,19 +15,19 @@ namespace IdentityServer4.Contrib.Cosmonaut.Mappers
     ///     <seealso cref="!:https://github.com/AutoMapper/AutoMapper/wiki/Configuration">
     ///     </seealso>
     /// </summary>
-    public class PersistedGrantMapperProfile : Profile
+    public class CacheMapperProfile : Profile
     {
         /// <summary>
-        ///     <see cref="PersistedGrantMapperProfile">
+        ///     <see cref="CacheMapperProfile">
         ///     </see>
         /// </summary>
-        public PersistedGrantMapperProfile()
+        public CacheMapperProfile()
         {
             // entity to model
-            CreateMap<PersistedGrantEntity, PersistedGrant>(MemberList.Destination);
+            CreateMap<CacheEntity, CacheItem>(MemberList.Destination);
 
             // model to entity
-            CreateMap<PersistedGrant, PersistedGrantEntity>(MemberList.Source);
+            CreateMap<CacheItem, CacheEntity>(MemberList.Source);
         }
     }
 }
