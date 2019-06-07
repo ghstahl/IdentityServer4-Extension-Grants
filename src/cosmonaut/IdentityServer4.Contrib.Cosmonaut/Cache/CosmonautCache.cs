@@ -40,6 +40,7 @@ namespace IdentityServer4.Contrib.Cosmonaut.Cache
         {
             var cacheItem = new CacheItem()
             {
+                Key = key,
                 Data = Serialize(item)
             };
             await _cacheStore.SetAsync(key, cacheItem, expiration);
