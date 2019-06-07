@@ -1,0 +1,105 @@
+##[section]Starting: Run Azure Cosmos DB Emulator container
+==============================================================================
+Task         : Azure Cosmos DB Emulator
+Description  : Create and start an Azure Cosmos DB Emulator container for testing
+Version      : 2.2.13
+Author       : Microsoft
+Help         : [More information](https://go.microsoft.com/fwlink/?LinkID=link-id)
+==============================================================================
+[command]C:\windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoLogo -NonInteractive -NoProfile -Command D:\a\_tasks\CosmosDbEmulator_63c722b8-ca8a-4830-8a46-8a6b7bce9c00\2.2.13\scripts\run.ps1 -ContainerName azure-cosmosdb-emulator -HostDirectory D:\a\1\b\azure-cosmosdb-emulator -Consistency Session -PublishParticular 8081:8081,8901:8901,8902:8902,8979:8979,10250:10250,10251:10251,10252:10252,10253:10253,10254:10254,10255:10255,10256:10256,10350:10350 -OutputFile D:\a\1\s\run-cosmosdbemulatorcontainer.8zXjQj\result.json
+docker create --interactive --tty --memory 2GB --name 'azure-cosmosdb-emulator' --mount 'type=bind,source=D:\a\1\b\azure-cosmosdb-emulator,destination=C:\CosmosDB.Emulator\bind-mount' -e COSMOSDB_EMULATOR_INSTALLATION_TYPE=VSIX   --publish 8081:8081  --publish 8901:8901  --publish 8902:8902  --publish 8979:8979  --publish 10250:10250  --publish 10251:10251  --publish 10252:10252  --publish 10253:10253  --publish 10254:10254  --publish 10255:10255  --publish 10256:10256  --publish 10350:10350 microsoft/azure-cosmosdb-emulator:2.2.1-2b4af9b3 '*>' C:\CosmosDB.Emulator\bind-mount\Diagnostics\Output.txt -Timeout 240 -Consistency Session
+Unable to find image 'microsoft/azure-cosmosdb-emulator:2.2.1-2b4af9b3' locally
+2.2.1-2b4af9b3: Pulling from microsoft/azure-cosmosdb-emulator
+3889bb8d808b: Already exists
+d0c71fc8924e: Pulling fs layer
+0c37a58e5521: Pulling fs layer
+2a191079935a: Pulling fs layer
+b279fbecf538: Pulling fs layer
+87f6b8fdf5aa: Pulling fs layer
+748abb8424ee: Pulling fs layer
+c51d32ce4f58: Pulling fs layer
+3c8c8fc112df: Pulling fs layer
+366cea30764a: Pulling fs layer
+e72fe0230296: Pulling fs layer
+a4343a3ed891: Pulling fs layer
+b279fbecf538: Waiting
+87f6b8fdf5aa: Waiting
+748abb8424ee: Waiting
+c51d32ce4f58: Waiting
+3c8c8fc112df: Waiting
+366cea30764a: Waiting
+e72fe0230296: Waiting
+a4343a3ed891: Waiting
+2a191079935a: Verifying Checksum
+2a191079935a: Download complete
+0c37a58e5521: Verifying Checksum
+0c37a58e5521: Download complete
+b279fbecf538: Verifying Checksum
+b279fbecf538: Download complete
+87f6b8fdf5aa: Verifying Checksum
+87f6b8fdf5aa: Download complete
+748abb8424ee: Verifying Checksum
+748abb8424ee: Download complete
+3c8c8fc112df: Verifying Checksum
+3c8c8fc112df: Download complete
+366cea30764a: Verifying Checksum
+366cea30764a: Download complete
+c51d32ce4f58: Verifying Checksum
+c51d32ce4f58: Download complete
+e72fe0230296: Verifying Checksum
+e72fe0230296: Download complete
+a4343a3ed891: Verifying Checksum
+a4343a3ed891: Download complete
+d0c71fc8924e: Verifying Checksum
+d0c71fc8924e: Download complete
+d0c71fc8924e: Pull complete
+0c37a58e5521: Pull complete
+2a191079935a: Pull complete
+b279fbecf538: Pull complete
+87f6b8fdf5aa: Pull complete
+748abb8424ee: Pull complete
+c51d32ce4f58: Pull complete
+3c8c8fc112df: Pull complete
+366cea30764a: Pull complete
+e72fe0230296: Pull complete
+a4343a3ed891: Pull complete
+Digest: sha256:c575cd046891fff30720131520178061f6329f2a3738b9a5f1e7392b547e8903
+Status: Downloaded newer image for microsoft/azure-cosmosdb-emulator:2.2.1-2b4af9b3
+ container 4c568fedcd12f7467d906eb3a8498e44d3b8a61821985490fa3b53143341b3ff created from image microsoft/azure-cosmosdb-emulator:2.2.1-2b4af9b3
+ container 4c568fedcd12f7467d906eb3a8498e44d3b8a61821985490fa3b53143341b3ff started
+
+Task failed: container 4c568fedcd12f7467d906eb3a8498e44d3b8a61821985490fa3b53143341b3ff emulator did not reach Running status within 240 seconds (current status: Stopped)
+
+**********************
+Windows PowerShell transcript start
+Start time: 20190605143941
+Username: User Manager\ContainerAdministrator
+RunAs User: User Manager\ContainerAdministrator
+Machine: 4C568FEDCD12 (Microsoft Windows NT 10.0.14393.0)
+Host Application: powershell.exe -NoExit -NoLogo -Command C:\CosmosDB.Emulator\Start.ps1 *> C:\CosmosDB.Emulator\bind-mount\Diagnostics\Output.txt -Timeout 240 -Consistency Session
+Process ID: 5344
+PSVersion: 5.1.14393.2636
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.14393.2636
+BuildVersion: 10.0.14393.2636
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+**********************
+
+Windows PowerShell output
+
+Transcript started, output file is C:\CosmosDB.Emulator\bind-mount\Diagnostics\Transcript.log
+**********************
+Start-CosmosDbEmulatorContainer : container 4c568fedcd12f7467d906eb3a8498e44d3b8a61821985490fa3b53143341b3ff emulator 
+did not reach Running status within 240 seconds (current status: Stopped)
+At D:\a\_tasks\CosmosDbEmulator_63c722b8-ca8a-4830-8a46-8a6b7bce9c00\2.2.13\scripts\run.ps1:67 char:13
++     $info = Start-CosmosDbEmulatorContainer -Container "$containerId" ...
++             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Write-Error], WriteErrorException
+    + FullyQualifiedErrorId : Microsoft.PowerShell.Commands.WriteErrorException,Start-CosmosDbEmulatorContainer
+ 
+##[error]C:\windows\System32\WindowsPowerShell\v1.0\powershell.exe failed with return code: 1
+##[section]Finishing: Run Azure Cosmos DB Emulator container
