@@ -1,6 +1,6 @@
 ﻿using Cosmonaut;
+using IdentityServer4.Contrib.Cosmonaut.Interfaces;
 using IdentityServer4.Contrib.Cosmonaut.Models;
-using IdentityServer4.Contrib.Cosmonaut.Stores;
 using IdentityServer4.Services;
 using IdentityServer4.Stores.Serialization;
 using Microsoft.Extensions.Logging;

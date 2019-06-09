@@ -45,6 +45,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 
         protected override void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
             var builder = services.AddIdentityServer();
             services.AddSingleton<IAsyncExceptionFilter, DemystifyExceptionFilter>();
             services.AddSingleton<DatabaseInitializer<UnitTest_CacheItemCosmosStore>>(sp =>
@@ -103,6 +104,26 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                     }
                 };
             });
+            services.AddSingleton<DatabaseInitializer<UnitTest_ResourceStore>>(sp =>
+            {
+                return new DatabaseInitializer<UnitTest_ResourceStore>()
+                {
+                    action = () =>
+                    {
+                        lock (this)
+                        {
+                            if (!Initialized)
+                            {
+                                var client = sp.GetRequiredService<ICosmonautClient>();
+
+                                var collection = client.GetCollectionAsync(UnitTest_ResourceStore.DatabaseId,
+                                  UnitTest_ResourceStore.CollectionName).GetAwaiter().GetResult();
+                                Initialized = true;
+                            }
+                        }
+                    }
+                };
+            });
             services.AddTransient<ICosmonautClient>(sp =>
             {
                 var client = new CosmonautClient(_emulatorUri, _emulatorKey, _connectionPolicy);
@@ -132,9 +153,20 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                        new RangeIndex(DataType.Number, -1),
                        new RangeIndex(DataType.String, -1));
                });
-
+            var cosmosStoreSettingsResources = new CosmosStoreSettings(
+                UnitTest_ResourceStore.DatabaseId,
+                _emulatorUri,
+                _emulatorKey,
+                s =>
+                {
+                    s.ConnectionPolicy = _connectionPolicy;
+                    s.IndexingPolicy = new IndexingPolicy(
+                        new RangeIndex(DataType.Number, -1),
+                        new RangeIndex(DataType.String, -1));
+                });
             builder.AddOperationalStore(cosmosStoreSettings, UnitTest_PersistedGrantStore.CollectionName);
             builder.AddCosmonautIdentityServerCacheStore(cosmosStoreSettingsCache, UnitTest_CacheItemCosmosStore.CollectionName);
+            builder.AddCosmonautResourceStore(cosmosStoreSettingsResources, UnitTest_ResourceStore.CollectionName);
 
         }
         protected override void Configure(IServiceProvider provider)

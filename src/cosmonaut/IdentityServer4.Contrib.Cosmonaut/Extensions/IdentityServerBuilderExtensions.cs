@@ -5,6 +5,7 @@ using Cosmonaut;
 using Cosmonaut.Extensions.Microsoft.DependencyInjection;
 using IdentityServer4.Contrib.Cosmonaut.Cache;
 using IdentityServer4.Contrib.Cosmonaut.Entities;
+using IdentityServer4.Contrib.Cosmonaut.Interfaces;
 using IdentityServer4.Contrib.Cosmonaut.Models;
 using IdentityServer4.Contrib.Cosmonaut.Stores;
 using IdentityServer4.Services;
@@ -18,6 +19,17 @@ namespace IdentityServer4.Contrib.Cosmonaut.Extensions
     /// </summary>
     public static class IdentityServerBuilderExtensions
     {
+        public static IIdentityServerBuilder AddCosmonautResourceStore(
+                 this IIdentityServerBuilder builder,
+                 CosmosStoreSettings settings,
+                 string overriddenCollectionName = "")
+        {
+            builder.Services.AddTransient<IResourceStore, ResourcesStore>();
+            builder.Services.AddTransient<IFullResourceStore, ResourcesStore>();
+            builder.Services.AddCosmosStore<ApiResourceEntity>(settings, overriddenCollectionName);
+            return builder;
+        }
+
         public static IIdentityServerBuilder AddCosmonautIdentityServerCacheStore(
                this IIdentityServerBuilder builder,
                CosmosStoreSettings settings,

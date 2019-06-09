@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>IdentityServer4</RootNamespace>
-    <DebugType>None</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

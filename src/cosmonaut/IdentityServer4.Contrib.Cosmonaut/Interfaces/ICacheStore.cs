@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace IdentityServer4.Contrib.Cosmonaut.Stores
+namespace IdentityServer4.Contrib.Cosmonaut.Interfaces
 {
     public interface ICacheStore<T> where T : class
     {

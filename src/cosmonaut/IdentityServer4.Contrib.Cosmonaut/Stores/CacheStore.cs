@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Cosmonaut;
 using IdentityServer4.Contrib.Cosmonaut.Entities;
 using IdentityServer4.Contrib.Cosmonaut.Extensions;
+using IdentityServer4.Contrib.Cosmonaut.Interfaces;
 using IdentityServer4.Contrib.Cosmonaut.Models;
 using IdentityServer4.Models;
 using Microsoft.Extensions.Logging;

@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
   </ItemGroup>
 
@@ -13,6 +14,10 @@
     <ProjectReference Include="..\..\IdentityServer4Source\2.4.0\IdentityServer4\P7Corp.IdentityServer4.csproj" />
     <ProjectReference Include="..\Cosmonaut.Extensions.Microsoft.DependencyInjection\Cosmonaut.Extensions.Microsoft.DependencyInjection.csproj" />
     <ProjectReference Include="..\Cosmonaut\Cosmonaut.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 ﻿using Cosmonaut;
 using FluentAssertions;
 using IdentityServer4.Contrib.Cosmonaut.Entities;
+using IdentityServer4.Contrib.Cosmonaut.Interfaces;
 using IdentityServer4.Contrib.Cosmonaut.Models;
-using IdentityServer4.Contrib.Cosmonaut.Stores;
 using IdentityServer4.Services;
 using System;
 using System.Collections.Generic;
