@@ -118,6 +118,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 
                                 var collection = client.GetCollectionAsync(UnitTest_ResourceStore.DatabaseId,
                                   UnitTest_ResourceStore.CollectionName).GetAwaiter().GetResult();
+
                                 Initialized = true;
                             }
                         }
@@ -163,6 +164,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                     s.IndexingPolicy = new IndexingPolicy(
                         new RangeIndex(DataType.Number, -1),
                         new RangeIndex(DataType.String, -1));
+
                 });
             builder.AddOperationalStore(cosmosStoreSettings, UnitTest_PersistedGrantStore.CollectionName);
             builder.AddCosmonautIdentityServerCacheStore(cosmosStoreSettingsCache, UnitTest_CacheItemCosmosStore.CollectionName);

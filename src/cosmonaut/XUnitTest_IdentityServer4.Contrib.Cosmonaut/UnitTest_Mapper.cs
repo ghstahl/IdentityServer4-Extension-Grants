@@ -164,5 +164,31 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
             model.DeepCompare(actual).Should().BeTrue();
 
         }
+        [Fact]
+        public void map_IdentityResource_to_Entity()
+        {
+            var model = new IdentityResource
+            {
+                DisplayName = NewGuidS,
+                Description = NewGuidS,
+                Enabled = true,
+                Name = NewGuidS,
+                UserClaims = new List<string> { NewGuidS },
+                Emphasize = true,
+                Required = true,
+                ShowInDiscoveryDocument = true,
+                Properties = new Dictionary<string, string>()
+                {
+                    { NewGuidS,NewGuidS}
+                }
+            };
+            var entity = model.ToEntity();
+
+
+            var actual = entity.ToModel();
+
+            model.DeepCompare(actual).Should().BeTrue();
+
+        }
     }
 }

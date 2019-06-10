@@ -109,6 +109,18 @@ namespace IdentityServer4.Contrib.Cosmonaut.Extensions
             if (!DeepCompare((Resource)first, (Resource)second)) return false;
             return true;
         }
+        public static bool DeepCompare(this IdentityResource first, IdentityResource second)
+        {
+            if (ReferenceEquals(first, second)) return true;
+            if ((first == null) || (second == null)) return false;
 
+            if (!DeepCompare((Resource)first, (Resource)second)) return false;
+
+            if (first.Emphasize != second.Emphasize) return false;
+            if (first.Required != second.Required) return false;
+            if (first.ShowInDiscoveryDocument != second.ShowInDiscoveryDocument) return false;
+
+            return true;
+        }
     }
 }

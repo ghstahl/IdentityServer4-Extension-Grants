@@ -18,40 +18,28 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
     public class ResourcesStore : IFullResourceStore
     {
         private IdentityServerOptions _options;
-        private IMemoryCache _memoryCache;
         private ICosmosStore<ApiResourceEntity> _apiResourceGrantCosmosStore;
         private ILogger<ResourcesStore> _logger;
         private static string ApiResourcesCacheKey = "66fbd540-4921-44a0-8948-3e1a33711d1e";
 
         public ResourcesStore(
             IdentityServerOptions options,
-            IMemoryCache memoryCache,
             ICosmosStore<ApiResourceEntity> apiResourceGrantCosmosStore,
             ILogger<ResourcesStore> logger)
         {
             _options = options;
-            _memoryCache = memoryCache;
             _apiResourceGrantCosmosStore = apiResourceGrantCosmosStore;
             _logger = logger;
         }
 
         public async Task<IEnumerable<ApiResource>> FetchAllApiResourcesAsync()
         {
-            List<ApiResource> currentApiResources;
-            bool isExist = _memoryCache.TryGetValue(ApiResourcesCacheKey, out currentApiResources);
-            if (!isExist)
-            {
-                var sql = $"SELECT* FROM c";
-                var apiResources = (await _apiResourceGrantCosmosStore.QueryMultipleAsync(sql));
-                var query = from item in apiResources
-                            select item.ToModel();
-                currentApiResources = query.ToList();
+            var sql = $"SELECT* FROM c";
+            var apiResources = (await _apiResourceGrantCosmosStore.QueryMultipleAsync(sql));
+            var query = from item in apiResources
+                        select item.ToModel();
 
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(_options.Caching.ResourceStoreExpiration);
-                _memoryCache.Set(ApiResourcesCacheKey, currentApiResources, cacheEntryOptions);
-            }
-            return currentApiResources;
+            return query;
         }
 
         public async Task<ApiResource> FindApiResourceAsync(string name)
@@ -73,15 +61,16 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
 
         public async Task<IEnumerable<ApiResource>> FindApiResourcesByScopeAsync(IEnumerable<string> scopeNames)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("SELECT* FROM c where ARRAY_CONTAINS(c.scopes,");
+            /*
+             SELECT distinct value c FROM c
+            join scope in c.scopes where Array_contains(["apples", "strawberries", "bananas"],scope.name,false)
+             */
+            const string sqlTemplate = "SELECT distinct value c FROM c join scope in c.scopes where Array_contains([{0}],scope.name,false)";
             var query = from item in scopeNames
-                        let c = $"{{name:\"{item}\"}}"
+                        let c = $"'{item}'"
                         select c;
 
-            sb.Append(string.Join(',', query));
-            sb.Append(")");
-            var sql = sb.ToString();
+            var sql = string.Format(sqlTemplate, string.Join(',', query));
 
             //            var sql = $"SELECT* FROM c where c.name = \"{name}\"";
             //where ARRAY_CONTAINS(c.scopes,{name:"scope1"},{name:"scope2"})
@@ -97,9 +86,13 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
             throw new NotImplementedException();
         }
 
-        public Task<Resources> GetAllResourcesAsync()
+        public async Task<Resources> GetAllResourcesAsync()
         {
-            throw new NotImplementedException();
+            var apiResources = await FetchAllApiResourcesAsync();
+            return new Resources
+            {
+                ApiResources = apiResources.ToList()
+            };
         }
 
         public async Task StoreAsync(ApiResource model)
@@ -126,7 +119,7 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
                 return;
             }
 
-            await _apiResourceGrantCosmosStore.RemoveByIdAsync(entity.Id, entity.Name);
+            var response = await _apiResourceGrantCosmosStore.RemoveByIdAsync(entity.Id, entity.Name);
 
         }
     }

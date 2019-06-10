@@ -6,12 +6,8 @@ using Newtonsoft.Json;
 
 namespace IdentityServer4.Contrib.Cosmonaut.Entities
 {
-    public class PersistedGrantEntity
+    public class PersistedGrantEntity : EntityBase
     {
-        [JsonProperty("id")]
-
-        public string Id { get; set; }
-
         [JsonProperty("ttl")]
         public int TTL { get; set; }
 

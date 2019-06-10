@@ -6,11 +6,8 @@ using System.Text;
 
 namespace IdentityServer4.Contrib.Cosmonaut.Entities
 {
-    public class ResourceEntity
+    public class ResourceEntity : EntityBase
     {
-        [JsonProperty("id")]
-
-        public string Id { get; set; }
         //
         // Summary:
         //     Indicates if this resource is enabled. Defaults to true.
