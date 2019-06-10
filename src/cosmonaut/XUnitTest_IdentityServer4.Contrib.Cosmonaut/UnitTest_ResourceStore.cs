@@ -26,8 +26,10 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
         private IFullResourceStore _resourceStore;
         private static List<ApiResource> _currenMany;
         private static ApiResource _currentApiResource;
+        private static IdentityResource _currentIdentityResource;
         public static readonly string DatabaseId = $"DB{nameof(UnitTest_ResourceStore)}";
-        public static readonly string CollectionName = $"COL{nameof(UnitTest_ResourceStore)}_Resources";
+        public static readonly string CollectionNameApiResources = $"COL{nameof(UnitTest_ResourceStore)}_ApiResources";
+        public static readonly string CollectionNameIdentityResources = $"COL{nameof(UnitTest_ResourceStore)}_IdentityResources";
 
 
         public UnitTest_ResourceStore(
@@ -181,6 +183,37 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
             result.Should().NotThrow();
 
         }
+        [Fact, TestPriority(0)]
+        public async Task store_identityResource_Success()
+        {
+            // Act
+            var result = new Action(() =>
+            {
+                _currentIdentityResource = new IdentityResource
+                {
+                    DisplayName = NewGuidS,
+                    Description = NewGuidS,
+                    Enabled = true,
+                    Name = NewGuidS,
+                    UserClaims = new List<string> { NewGuidS },
+                    Emphasize = true,
+                    Required = true,
+                    ShowInDiscoveryDocument = true,
+                    Properties = new Dictionary<string, string>(){
+                            { NewGuidS,NewGuidS}
+                        }
+                };
+
+           
+
+                _resourceStore.StoreAsync(_currentIdentityResource).GetAwaiter().GetResult();
+
+            });
+
+            //Assert
+            result.Should().NotThrow();
+
+        }
         [Fact, TestPriority(1)]
         public async Task get_apiResource_Success()
         {
@@ -202,6 +235,19 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
 
             result.FirstOrDefault().DeepCompare(_currentApiResource).Should().BeTrue();
         }
+        [Fact, TestPriority(1)]
+        public async Task FindIdentityesourcesByScopeAsync_Success()
+        {
+            var scopes = new List<string>
+            {
+                _currentIdentityResource.Name
+            };
+            var result = await _resourceStore.FindIdentityResourcesByScopeAsync(scopes);
+            result.Should().NotBeNull();
+            result.Count().Should().Be(1);
+
+            result.FirstOrDefault().DeepCompare(_currentIdentityResource).Should().BeTrue();
+        }
 
         [Fact, TestPriority(2)]
         public async Task remove_apiResource_Success()
@@ -217,13 +263,32 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
             result.Should().NotThrow();
 
         }
+        [Fact, TestPriority(2)]
+        public async Task remove_identityResource_Success()
+        {
+            // Act
+            var result = new Action(() =>
+            {
+                _resourceStore.RemoveIdentityResourceAsync(_currentIdentityResource.Name).GetAwaiter().GetResult();
+
+            });
+
+            //Assert
+            result.Should().NotThrow();
+
+        }
         [Fact, TestPriority(3)]
         public async Task get_apiResource_notfound()
         {
             var model = await _resourceStore.FindApiResourceAsync(_currentApiResource.Name);
             model.Should().BeNull();
         }
-
+        [Fact, TestPriority(3)]
+        public async Task get_identityResource_notfound()
+        {
+            var model = await _resourceStore.FindIdentityResourceAsync(_currentApiResource.Name);
+            model.Should().BeNull();
+        }
 
     }
 }

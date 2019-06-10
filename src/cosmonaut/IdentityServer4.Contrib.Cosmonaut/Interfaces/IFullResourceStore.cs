@@ -8,5 +8,9 @@ namespace IdentityServer4.Contrib.Cosmonaut.Interfaces
     {
         Task StoreAsync(ApiResource apiResource);
         Task RemoveApiResourceAsync(string name);
+        Task StoreAsync(IdentityResource apiResource);
+        Task RemoveIdentityResourceAsync(string name);
+
+        Task<IdentityResource> FindIdentityResourceAsync(string name);
     }
 }

@@ -116,8 +116,10 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                             {
                                 var client = sp.GetRequiredService<ICosmonautClient>();
 
-                                var collection = client.GetCollectionAsync(UnitTest_ResourceStore.DatabaseId,
-                                  UnitTest_ResourceStore.CollectionName).GetAwaiter().GetResult();
+                                var collectionApiResource = client.GetCollectionAsync(UnitTest_ResourceStore.DatabaseId,
+                                  UnitTest_ResourceStore.CollectionNameApiResources).GetAwaiter().GetResult();
+                                var collectionIdentityResource = client.GetCollectionAsync(UnitTest_ResourceStore.DatabaseId,
+                                                           UnitTest_ResourceStore.CollectionNameIdentityResources).GetAwaiter().GetResult();
 
                                 Initialized = true;
                             }
@@ -168,7 +170,10 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
                 });
             builder.AddOperationalStore(cosmosStoreSettings, UnitTest_PersistedGrantStore.CollectionName);
             builder.AddCosmonautIdentityServerCacheStore(cosmosStoreSettingsCache, UnitTest_CacheItemCosmosStore.CollectionName);
-            builder.AddCosmonautResourceStore(cosmosStoreSettingsResources, UnitTest_ResourceStore.CollectionName);
+            builder.AddCosmonautResourceStore(
+                cosmosStoreSettingsResources, 
+                UnitTest_ResourceStore.CollectionNameApiResources,
+                UnitTest_ResourceStore.CollectionNameIdentityResources);
 
         }
         protected override void Configure(IServiceProvider provider)

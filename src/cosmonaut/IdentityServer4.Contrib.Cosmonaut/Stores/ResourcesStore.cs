@@ -19,16 +19,19 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
     {
         private IdentityServerOptions _options;
         private ICosmosStore<ApiResourceEntity> _apiResourceGrantCosmosStore;
+        private ICosmosStore<IdentityResourceEntity> _identityResourceGrantCosmosStore;
         private ILogger<ResourcesStore> _logger;
         private static string ApiResourcesCacheKey = "66fbd540-4921-44a0-8948-3e1a33711d1e";
 
         public ResourcesStore(
             IdentityServerOptions options,
             ICosmosStore<ApiResourceEntity> apiResourceGrantCosmosStore,
+            ICosmosStore<IdentityResourceEntity> identityResourceGrantCosmosStore,
             ILogger<ResourcesStore> logger)
         {
             _options = options;
             _apiResourceGrantCosmosStore = apiResourceGrantCosmosStore;
+            _identityResourceGrantCosmosStore = identityResourceGrantCosmosStore;
             _logger = logger;
         }
 
@@ -45,7 +48,7 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
         public async Task<ApiResource> FindApiResourceAsync(string name)
         {
             Guard.ForNull(name, nameof(name));
-            var sql = $"SELECT* FROM c where c.name = \"{name}\"";
+            var sql = $"SELECT* FROM c where c.name = '{name}'";
             var entity = (await _apiResourceGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
             {
                 PartitionKey = new Microsoft.Azure.Documents.PartitionKey(name)
@@ -81,9 +84,22 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
             return q2;
         }
 
-        public Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeAsync(IEnumerable<string> scopeNames)
+        public async Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeAsync(IEnumerable<string> scopeNames)
         {
-            throw new NotImplementedException();
+            /*
+              SELECT DISTINCT VALUE c FROM c
+                WHERE ARRAY_CONTAINS(["1d2e3da2-76e3-4a58-99d2-c2c04bdeaf4d/a", "strawberries", "bananas"],c.name,false)
+   
+             */
+            const string sqlTemplate = "SELECT DISTINCT VALUE c FROM c WHERE ARRAY_CONTAINS([{0}],c.name,false)";
+            var query = from item in scopeNames
+                        let c = $"'{item}'"
+                        select c;
+            var sql = string.Format(sqlTemplate, string.Join(',', query));
+            var result = await _identityResourceGrantCosmosStore.QueryMultipleAsync(sql);
+            var q2 = from item in result
+                     select item.ToModel();
+            return q2;
         }
 
         public async Task<Resources> GetAllResourcesAsync()
@@ -103,13 +119,13 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
             var response = await _apiResourceGrantCosmosStore.UpsertAsync(entity);
             if (!response.IsSuccess)
             {
-                _logger.LogCritical("Could not store PersitedGrant");
+                _logger.LogCritical("Could not store ApiResource");
             }
         }
         public async Task RemoveApiResourceAsync(string name)
         {
             Guard.ForNull(name, nameof(name));
-            var sql = $"SELECT* FROM c where c.name = \"{name}\"";
+            var sql = $"SELECT* FROM c where c.name = '{name}'";
             var entity = (await _apiResourceGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
             {
                 PartitionKey = new Microsoft.Azure.Documents.PartitionKey(name)
@@ -121,6 +137,51 @@ namespace IdentityServer4.Contrib.Cosmonaut.Stores
 
             var response = await _apiResourceGrantCosmosStore.RemoveByIdAsync(entity.Id, entity.Name);
 
+        }
+        public async Task StoreAsync(IdentityResource model)
+        {
+            Guard.ForNull(model, nameof(model));
+            Guard.ForNull(model.Name, nameof(model.Name));
+            var entity = model.ToEntity();
+            var response = await _identityResourceGrantCosmosStore.UpsertAsync(entity);
+            if (!response.IsSuccess)
+            {
+                _logger.LogCritical("Could not store IdentityResource");
+            }
+        }
+
+        public async Task RemoveIdentityResourceAsync(string name)
+        {
+            Guard.ForNull(name, nameof(name));
+            var sql = $"SELECT* FROM c where c.name = '{name}'";
+            var entity = (await _identityResourceGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(name)
+            }));
+            if (entity == null)
+            {
+                return;
+            }
+
+            var response = await _identityResourceGrantCosmosStore.RemoveByIdAsync(entity.Id, entity.Name);
+
+        }
+
+        public async Task<IdentityResource> FindIdentityResourceAsync(string name)
+        {
+            Guard.ForNull(name, nameof(name));
+            var sql = $"SELECT* FROM c where c.name = '{name}'";
+            var entity = (await _identityResourceGrantCosmosStore.QuerySingleAsync(sql, feedOptions: new Microsoft.Azure.Documents.Client.FeedOptions
+            {
+                PartitionKey = new Microsoft.Azure.Documents.PartitionKey(name)
+            }));
+            if (entity == null)
+            {
+                return null;
+            }
+            var model = entity.ToModel();
+
+            return model;
         }
     }
 }

@@ -11,6 +11,7 @@ using IdentityServer4.Contrib.Cosmonaut.Stores;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace IdentityServer4.Contrib.Cosmonaut.Extensions
 {
@@ -22,13 +23,16 @@ namespace IdentityServer4.Contrib.Cosmonaut.Extensions
         public static IIdentityServerBuilder AddCosmonautResourceStore(
                  this IIdentityServerBuilder builder,
                  CosmosStoreSettings settings,
-                 string overriddenCollectionName = "")
+                 string overriddenApiResourceCollectionName = "",
+                 string overriddenIdentityResourceCollectionName = "")
         {
-            builder.Services.AddTransient<IResourceStore, ResourcesStore>();
-            builder.Services.AddTransient<IFullResourceStore, ResourcesStore>();
-            builder.Services.AddCosmosStore<ApiResourceEntity>(settings, overriddenCollectionName);
+            builder.Services.TryAddTransient<IResourceStore, ResourcesStore>();
+            builder.Services.TryAddTransient<IFullResourceStore, ResourcesStore>();
+            builder.Services.AddCosmosStore<ApiResourceEntity>(settings, overriddenApiResourceCollectionName);
+            builder.Services.AddCosmosStore<IdentityResourceEntity>(settings, overriddenIdentityResourceCollectionName);
             return builder;
         }
+     
 
         public static IIdentityServerBuilder AddCosmonautIdentityServerCacheStore(
                this IIdentityServerBuilder builder,
