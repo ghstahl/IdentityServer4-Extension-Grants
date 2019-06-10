@@ -236,7 +236,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
             result.FirstOrDefault().DeepCompare(_currentApiResource).Should().BeTrue();
         }
         [Fact, TestPriority(1)]
-        public async Task FindIdentityesourcesByScopeAsync_Success()
+        public async Task FindIdentityResourcesByScopeAsync_Success()
         {
             var scopes = new List<string>
             {
