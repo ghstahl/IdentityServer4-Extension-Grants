@@ -203,7 +203,7 @@ namespace XUnitTest_IdentityServer4.Contrib.Cosmonaut
             result.FirstOrDefault().DeepCompare(_currentApiResource).Should().BeTrue();
         }
 
-        [Fact, TestPriority(3)]
+        [Fact, TestPriority(2)]
         public async Task remove_apiResource_Success()
         {
             // Act
