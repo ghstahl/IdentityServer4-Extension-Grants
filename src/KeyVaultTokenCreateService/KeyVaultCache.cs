@@ -106,6 +106,9 @@ namespace P7IdentityServer4
                 var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
                 var queryRsaSecurityKeys = from item in keyBundles
                                            let c = new RsaSecurityKey(keyVaultClient.ToRSA(item))
+                                           {
+                                               KeyId = item.KeyIdentifier.Identifier
+                                           }
                                            select c;
 
                 //     var currentKeyBundle = await _publicKeyProvider.GetKeyBundleAsync();
