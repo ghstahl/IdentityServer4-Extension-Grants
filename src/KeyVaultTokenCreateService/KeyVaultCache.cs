@@ -74,7 +74,14 @@ namespace P7IdentityServer4
         {
             await RefreshCacheData();
         }
+        string StipPort(string url)
+        {
+            UriBuilder u1 = new UriBuilder(url);
+            u1.Port = -1;
+            string clean = u1.Uri.ToString();
 
+            return clean;
+        }
         private async Task RefreshCacheData()
         {
             try
@@ -107,7 +114,7 @@ namespace P7IdentityServer4
                 var queryRsaSecurityKeys = from item in keyBundles
                                            let c = new RsaSecurityKey(keyVaultClient.ToRSA(item))
                                            {
-                                               KeyId = item.KeyIdentifier.Identifier
+                                               KeyId = StipPort(item.KeyIdentifier.Identifier)
                                            }
                                            select c;
 
