@@ -24,7 +24,6 @@ namespace P7IdentityServer4
     {
         private const string CacheValidationKey = "62777f80-2be6-4882-b1cc-28a202d423e6";
         private const string CacheValidationKeyTimeStamp = "104895ef-71cc-4c98-9a72-d3ffea75977b";
-        private readonly IPublicKeyProvider _publicKeyProvider;
         private readonly AzureKeyVaultTokenSigningServiceOptions _keyVaultOptions;
         private readonly AzureKeyVaultAuthentication _azureKeyVaultAuthentication;
         private List<KeyBundle> _keyBundles;
@@ -34,12 +33,10 @@ namespace P7IdentityServer4
         private DefaultCache<TimeStamp> _cacheTimeStamp;
 
         public KeyVaultCache(
-            IPublicKeyProvider publicKeyProvider,
             IOptions<AzureKeyVaultTokenSigningServiceOptions> keyVaultOptions,
             IMemoryCache cache,
             ILogger<KeyVaultCache> logger)
         {
-            _publicKeyProvider = publicKeyProvider;
             _keyVaultOptions = keyVaultOptions.Value;
             _azureKeyVaultAuthentication = new AzureKeyVaultAuthentication(_keyVaultOptions.ClientId, _keyVaultOptions.ClientSecret);
             _cache = cache;
@@ -98,47 +95,43 @@ namespace P7IdentityServer4
                 if (now < cacheTime.AddHours(6))
                     return;
 
-                var keyBundles = await GetKeyBundleVersionsAsync();
-                var queryKbs = from item in keyBundles
+                _keyBundles = await GetKeyBundleVersionsAsync();
+                var queryKbs = from item in _keyBundles
                                where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
+                               && (item.Attributes.Expires == null || item.Attributes.Expires > DateTime.UtcNow)
                                select item;
-                keyBundles = queryKbs.ToList();
+                _keyBundles = queryKbs.ToList();
+
+                var latestKB = GetLatestKeyBundleWithRolloverDelay(_keyBundles);
 
                 X509Certificate2 x509Certificate2 = null;
                 if (!_keyVaultOptions.UseKeyVaultSigning)
                 {
-                    x509Certificate2 = await GetX509Certificate2Async();
+                    var x509Certificate2s = await GetAllCertificateVersions();
+                    x509Certificate2 = GetLatestCertificateWithRolloverDelay(x509Certificate2s);
                 }
 
                 var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
-                var queryRsaSecurityKeys = from item in keyBundles
+                var queryRsaSecurityKeys = from item in _keyBundles
                                            let c = new RsaSecurityKey(keyVaultClient.ToRSA(item))
                                            {
                                                KeyId = StipPort(item.KeyIdentifier.Identifier)
                                            }
                                            select c;
 
-                //     var currentKeyBundle = await _publicKeyProvider.GetKeyBundleAsync();
-                //     var securityKey = new RsaSecurityKey(keyVaultClient.ToRSA(currentKeyBundle));
-                //     var signingCredentials = new SigningCredentials(securityKey, securityKey.Rsa.SignatureAlgorithm);
-
                 var jwks = new List<JsonWebKey>();
-                var query = from item in keyBundles
-                            where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
-                            select item;
-                _keyBundles = query.ToList();
                 foreach (var keyBundle in _keyBundles)
                 {
                     jwks.Add(new JsonWebKey(keyBundle.Key.ToString()));
                 }
 
-                var kid = await _publicKeyProvider.GetKeyIdentifierAsync();
+                var jwk = latestKB.Key;
+                var kid = latestKB.KeyIdentifier;               
 
-                var jwk = await _publicKeyProvider.GetAsync();
                 var parameters = new RSAParameters
                 {
-                    Exponent = Base64UrlEncoder.DecodeBytes(jwk.E),
-                    Modulus = Base64UrlEncoder.DecodeBytes(jwk.N)
+                    Exponent =  jwk.E,
+                    Modulus = jwk.N
                 };
                 var securityKey = new RsaSecurityKey(parameters)
                 {
@@ -149,7 +142,6 @@ namespace P7IdentityServer4
                 if (_keyVaultOptions.UseKeyVaultSigning)
                 {
                     signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
-                    //  var tokenCreateSigningCredentials = await GetTokenCreationSigningCredentialsAsync();
                 }
                 else
                 {
@@ -181,22 +173,44 @@ namespace P7IdentityServer4
 
         }
 
-        private async Task<SigningCredentials> GetTokenCreationSigningCredentialsAsync()
+        private async Task<List<X509Certificate2>> GetAllCertificateVersions()
         {
-            var jwk = await _publicKeyProvider.GetAsync();
-            var parameters = new RSAParameters
-            {
-                Exponent = Base64UrlEncoder.DecodeBytes(jwk.E),
-                Modulus = Base64UrlEncoder.DecodeBytes(jwk.N)
-            };
-            var securityKey = new RsaSecurityKey(parameters)
-            {
-                KeyId = jwk.Kid,
-            };
+            var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
 
-            return new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
+            var certificates = new List<X509Certificate2>();
+
+            // Get the first page of certificates
+            var certificateItemsPage = await keyVaultClient.GetCertificateVersionsAsync(_keyVaultOptions.KeyVaultUrl, _keyVaultOptions.KeyIdentifier);
+            while (true)
+            {
+                foreach (var certificateItem in certificateItemsPage)
+                {
+                    // Ignored disabled or expired certificates
+                    if (certificateItem.Attributes.Enabled == true &&
+                        (certificateItem.Attributes.Expires == null || certificateItem.Attributes.Expires > DateTime.UtcNow))
+                    {
+                        var certificateVersionBundle = await keyVaultClient.GetCertificateAsync(certificateItem.Identifier.Identifier);
+                        var certificatePrivateKeySecretBundle = await keyVaultClient.GetSecretAsync(certificateVersionBundle.SecretIdentifier.Identifier);
+                        var privateKeyBytes = Convert.FromBase64String(certificatePrivateKeySecretBundle.Value);
+                        var certificateWithPrivateKey = new X509Certificate2(privateKeyBytes, (string)null, X509KeyStorageFlags.MachineKeySet);
+
+                        certificates.Add(certificateWithPrivateKey);
+                    }
+                }
+
+                if (certificateItemsPage.NextPageLink == null)
+                {
+                    break;
+                }
+                else
+                {
+                    // Get the next page
+                    certificateItemsPage = await keyVaultClient.GetCertificateVersionsNextAsync(certificateItemsPage.NextPageLink);
+                }
+            }
+
+            return certificates;
         }
-
         private async Task<List<KeyBundle>> GetKeyBundleVersionsAsync()
         {
             var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
@@ -221,6 +235,44 @@ namespace P7IdentityServer4
 
             return keyBundles;
         }
+        private X509Certificate2 GetLatestCertificateWithRolloverDelay(List<X509Certificate2> certificates)
+        {
+            // First limit the search to just those certificates that have existed longer than the rollover delay.
+            var rolloverCutoff = DateTime.UtcNow.AddHours(-_keyVaultOptions.RolloverDelayHours);
+            var potentialCerts = certificates.Where(c => c.NotBefore < rolloverCutoff);
+
+            // If no certs could be found, then widen the search to any usable certificate.
+            if (!potentialCerts.Any())
+            {
+                potentialCerts = certificates.Where(c => c.NotBefore < DateTime.UtcNow);
+            }
+
+            // Of the potential certs, return the newest one.
+            return potentialCerts
+                .OrderByDescending(c => c.NotBefore)
+                .FirstOrDefault();
+        }
+
+        private KeyBundle GetLatestKeyBundleWithRolloverDelay(List<KeyBundle> kbs)
+        {
+            // First limit the search to just those certificates that have existed longer than the rollover delay.
+            var rolloverCutoff = DateTime.UtcNow.AddHours(-_keyVaultOptions.RolloverDelayHours);
+            var potentialCerts = kbs.Where(c => c.Attributes.NotBefore < rolloverCutoff);
+
+            // If no certs could be found, then widen the search to any usable certificate.
+            if (!potentialCerts.Any())
+            {
+                potentialCerts = kbs.Where(c => c.Attributes.NotBefore < DateTime.UtcNow);
+            }
+
+            // Of the potential certs, return the newest one.
+            return potentialCerts
+                .OrderByDescending(c => c.Attributes.NotBefore)
+                .FirstOrDefault();
+        }
+
+         
+
         private async Task<X509Certificate2> GetX509Certificate2Async()
         {
             var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);

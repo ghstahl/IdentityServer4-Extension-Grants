@@ -10,5 +10,6 @@
         public string KeyVaultUrl { get; set; }
 //        https://crontab.guru/every-6-hours
         public string CronScheduleDataRefresh { get; set; } = "*/5 * * * *"; //https://crontab.guru/every-5-minutes
+        public int RolloverDelayHours { get; set; }
     }
 }
